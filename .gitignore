@@ -15,8 +15,7 @@ Thumbs.db
 # Auto-generated opencode skill lock
 skills-lock.json
 
-# Placeholder SEO assets (replace with real ones on deploy)
-public/og-image.jpg
+
 
 # Unused/broken images
 src/assets/hero.png
