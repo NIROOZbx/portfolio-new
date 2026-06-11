@@ -5,6 +5,7 @@ import Services from './components/Services'
 import About from './components/About'
 import Projects from './components/Projects'
 import Contact from './components/Contact'
+import NavbarFooter from './components/NavbarFooter'
 import heroImg from './assets/hero2.webp'
 
 function App() {
@@ -58,12 +59,19 @@ function App() {
       {/* Main content */}
       <main
         ref={mainRef}
-        className={`flex-1 min-h-0 px-6 box-border relative z-10
+        className={`flex-1 min-h-0 px-6 box-border relative z-10 mobile-content-pad
           ${currentTab === 'home'
-            ? 'overflow-hidden md:py-0 md:px-16 pt-[72px] md:pt-8 pb-28'
-            : 'overflow-y-auto pt-[72px] md:pt-8 pb-46 md:pb-24 md:px-16 md:py-10'}`}
+            ? 'overflow-hidden md:py-0 md:px-16 pt-[72px] md:pt-8'
+            : 'overflow-y-auto pt-[96px] md:pt-8 md:pb-16 md:px-16 md:py-10'}`}
       >
         {renderContent()}
+
+        {currentTab !== 'home' && (
+          <div className="md:hidden mt-3 pb-8 border-t border-[#e5e4e7]/40 pt-8 w-full flex justify-center">
+            <NavbarFooter />
+          </div>
+        )}
+
       </main>
     </div>
   )

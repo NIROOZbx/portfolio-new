@@ -1,6 +1,7 @@
 import React from 'react'
 import { ArrowLeft } from 'lucide-react'
 import GithubContributionCard from './GitHub'
+import NavbarFooter from './NavbarFooter'
 
 interface HomeProps {
   onViewProjects: () => void
@@ -9,19 +10,19 @@ interface HomeProps {
 
 const Home: React.FC<HomeProps> = ({ onViewProjects, onGetInTouch }) => {
   return (
-    <section className="relative w-full min-h-[70vh] md:min-h-[80vh] flex flex-col items-center justify-center text-center py-6 md:py-20 overflow-hidden box-border">
+    <section className="relative w-full min-h-[70vh] md:min-h-[80vh] flex flex-col items-center justify-center text-center py-2 md:py-20 overflow-hidden box-border">
 
       {/* Centered Hero Content */}
       <div className="max-w-4xl mx-auto flex flex-col items-center justify-center relative z-10 w-full">
-        <h1 className="font-heading font-bold text-5xl md:text-[48px] leading-[1.05] tracking-tight bg-[linear-gradient(3.65deg,var(--color-gradient-start),var(--color-gradient-end))] bg-clip-text text-transparent mb-4 md:mb-6 text-center">
+        <h1 className="font-heading font-bold text-4xl md:text-[48px] leading-[1.05] tracking-tight bg-[linear-gradient(3.65deg,var(--color-gradient-start),var(--color-gradient-end))] bg-clip-text text-transparent mb-2 md:mb-6 text-center">
           Hi I'm Nirooz
         </h1>
-        <p className="font-sans text-xl md:text-[28px] leading-[1.3] text-text-subheading max-w-2xl mb-6 md:mb-12 text-center">
+        <p className="font-sans text-base md:text-[28px] leading-[1.3] text-text-subheading max-w-2xl mb-4 md:mb-12 text-center">
           I craft high converting websites that align with your brand
         </p>
 
         {/* Central CTA Buttons */}
-        <div className="flex flex-col sm:flex-row gap-4 items-center justify-center w-full mb-6 md:mb-8">
+        <div className="flex flex-col sm:flex-row gap-4 items-center justify-center w-full mb-4 md:mb-8">
           {/* Get in touch CTA (Black Pill Button) */}
           <button
             onClick={onGetInTouch}
@@ -46,6 +47,11 @@ const Home: React.FC<HomeProps> = ({ onViewProjects, onGetInTouch }) => {
         {/* GitHub Contributions Card on Mobile only (No page scroll needed) */}
         <div className="block md:hidden w-full max-w-md mx-auto">
           <GithubContributionCard />
+        </div>
+
+        {/* Mobile-only Footer inside Home page wrapper to fit perfectly */}
+        <div className="block md:hidden w-full border-t border-[#e5e4e7]/20 pt-4 mt-6">
+          <NavbarFooter />
         </div>
       </div>
     </section>

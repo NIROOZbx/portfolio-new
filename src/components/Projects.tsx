@@ -2,9 +2,9 @@ import React from 'react'
 import ProjectCard from './ProjectCard'
 import type { ProjectItem } from './ProjectCard'
 import { SITE_CONFIG } from '../config/constants'
-import jerseyHubCover from '../assets/jerseyhub-cover.png'
-import envoyCover from '../assets/envoy-cover-2.png'
-import relayCover from '../assets/relay-cover.png'
+import jerseyHubCover from '../assets/jerseyhub-cover.webp'
+import envoyCover from '../assets/envoy-cover-2.webp'
+import relayCover from '../assets/relay-cover.webp'
 const Projects: React.FC = () => {
   const projectList: ProjectItem[] = [
     {

@@ -73,3 +73,13 @@ body {
   -ms-overflow-style: none;
   scrollbar-width: none;
 }
+
+:root {
+  --bottom-nav-height: calc(env(safe-area-inset-bottom, 0px) + 8rem);
+}
+
+@media (max-width: 767px) {
+  .mobile-content-pad {
+    padding-bottom: var(--bottom-nav-height) !important;
+  }
+}

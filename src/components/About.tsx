@@ -8,7 +8,7 @@ const About: React.FC = () => {
       <section className="text-left flex flex-col md:flex-row gap-12 w-full">
         {/* Left Column: About copy */}
         <div className="flex-grow md:w-[60%] flex flex-col gap-6">
-          <h1 className="font-heading font-semibold text-4xl md:text-[56px] text-text-heading leading-none tracking-tight mb-2">
+          <h1 className="font-heading font-semibold text-4xl md:text-[56px] text-text-heading leading-none tracking-tight mb-6 md:mb-2">
             About
           </h1>
           
