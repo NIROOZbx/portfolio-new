@@ -57,11 +57,17 @@
 html,
 body {
   margin: 0;
+  height: 100%;
+  overflow: hidden;
   background-color: var(--color-primary-bg);
   color: var(--color-text-subheading);
   font-family: var(--font-sans);
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
+}
+
+#root {
+  height: 100%;
 }
 
 /* Hide scrollbar globally for all elements (including main and scrolling divs) */
@@ -82,4 +88,8 @@ body {
   .mobile-content-pad {
     padding-bottom: var(--bottom-nav-height) !important;
   }
+}
+
+.overflow-y-auto {
+  -webkit-overflow-scrolling: touch;
 }
