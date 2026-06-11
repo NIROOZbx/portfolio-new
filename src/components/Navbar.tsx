@@ -53,10 +53,9 @@ const Navbar: React.FC<NavbarProps> = ({ currentTab, setCurrentTab, scrollRef })
         <NavbarBrand onNavigateHome={() => setCurrentTab('home')} />
       </header>
 
-      {/* ── Mobile Bottom Bar — lives OUTSIDE the aside so md:hidden doesn't swallow it ── */}
       <nav
         className={`
-    fixed left-1/2 -translate-x-1/2 z-50
+    fixed left-1/2 -translate-x-1/2 z-50 bottom-1
     flex md:hidden
     items-center
     p-1.5 gap-1
@@ -69,7 +68,7 @@ const Navbar: React.FC<NavbarProps> = ({ currentTab, setCurrentTab, scrollRef })
   `}
         style={{
           WebkitBackdropFilter: 'blur(20px)',
-          bottom: 'calc(env(safe-area-inset-bottom) + 60px)'
+          bottom: 'calc(env(safe-area-inset-bottom) + 15px)'
         }}
       >
         {navItems.map((item) => {
