@@ -7,6 +7,8 @@ import Projects from './components/Projects'
 import Contact from './components/Contact'
 import NavbarFooter from './components/NavbarFooter'
 import heroImg from './assets/hero2.webp'
+import { SpeedInsights } from '@vercel/speed-insights/react'
+import { Analytics } from '@vercel/analytics/react'
 
 function App() {
   const [currentTab, setCurrentTab] = useState('home')
@@ -42,6 +44,8 @@ function App() {
 
   return (
     <div className="flex flex-col md:flex-row w-full h-screen h-dvh relative bg-primary-bg">
+      <SpeedInsights />
+      <Analytics />
       {/* Viewport-wide Hero Background (only on Home tab) */}
       {currentTab === 'home' && (
         <div className="absolute inset-0 w-full h-full pointer-events-none select-none overflow-hidden z-0">
