@@ -1,4 +1,5 @@
 import React, { useEffect, useRef, useState } from 'react'
+import { motion } from 'framer-motion'
 import NavbarBrand from './NavbarBrand'
 import NavItems from './NavItems'
 import NavbarFooter from './NavbarFooter'
@@ -48,34 +49,34 @@ const Navbar: React.FC<NavbarProps> = ({ currentTab, setCurrentTab, scrollRef })
     <>
       {/* Mobile Top Header */}
       <header
-        className={`md:hidden w-full px-5 py-2 bg-primary-bg/90 backdrop-blur-xl border-b border-[#e5e4e7]/80 flex items-center fixed top-0 left-0 right-0 z-40 transition-transform duration-300 ease-in-out ${hidden ? '-translate-y-full' : 'translate-y-0'
-          }`}
+        className={`md:hidden w-full px-5 py-2 bg-primary-bg/90 backdrop-blur-xl border-b border-[#e5e4e7]/80 flex items-center fixed top-0 left-0 right-0 z-40 transition-transform duration-300 ease-in-out ${
+          hidden ? '-translate-y-full' : 'translate-y-0'
+        }`}
       >
         <NavbarBrand onNavigateHome={() => setCurrentTab('home')} />
       </header>
 
+      {/* Mobile Bottom Nav */}
       <nav
         className={`
-    fixed left-1/2 -translate-x-1/2 z-50 bottom-1
-    flex md:hidden
-    items-center
-    p-1.5 gap-1
-    rounded-4xl
-    bg-white/20 backdrop-blur-xl
-    border border-white/30
-    shadow-[0_8px_32px_rgba(0,0,0,0.12)]
-    w-[calc(100%-3rem)] 
-    transition-transform duration-300 ease-in-out
-  `}
+          fixed left-1/2 -translate-x-1/2 z-50
+          flex md:hidden items-center
+          p-1.5 gap-1 rounded-4xl
+          bg-white/20 backdrop-blur-xl
+          border border-white/30
+          shadow-[0_8px_32px_rgba(0,0,0,0.12)]
+          w-[calc(100%-3rem)]
+          transition-transform duration-300 ease-in-out
+        `}
         style={{
           WebkitBackdropFilter: 'blur(20px)',
-          bottom: 'calc(env(safe-area-inset-bottom) + 15px)'
+          bottom: 'calc(env(safe-area-inset-bottom) + 15px)',
         }}
       >
         {navItems.map((item) => {
           const active = currentTab === item.id
           return (
-          <button
+            <button
               key={item.id}
               onClick={() => {
                 setCurrentTab(item.id)
@@ -85,18 +86,34 @@ const Navbar: React.FC<NavbarProps> = ({ currentTab, setCurrentTab, scrollRef })
               aria-current={active ? 'page' : undefined}
               aria-label={item.label}
               className={`
-                flex items-center justify-center
+                relative flex items-center justify-center
                 flex-1 h-10 rounded-4xl
-                transition-all duration-200 ease-out
-                cursor-pointer border-0 outline-none
+                cursor-pointer border-0 outline-none bg-transparent
                 focus-visible:ring-2 focus-visible:ring-element-black/40
                 ${tapped === item.id ? 'nav-pop' : ''}
-                ${active
-                  ? 'bg-element-black text-primary-bg shadow-[0_2px_8px_rgba(0,0,0,0.25)]'
-                  : 'bg-transparent text-text-subheading hover:text-element-black active:scale-90'}
               `}
             >
-              {item.icon}
+              {/* Framer Motion sliding pill — shared layoutId causes it to animate between buttons */}
+              {active && (
+                <motion.div
+                  layoutId="nav-pill"
+                  className="absolute inset-0 rounded-4xl bg-element-black shadow-[0_2px_8px_rgba(0,0,0,0.25)]"
+                  transition={{
+                    type: 'spring',
+                    stiffness: 420,
+                    damping: 34,
+                    mass: 0.75,
+                  }}
+                />
+              )}
+              {/* Icon sits above the pill */}
+              <motion.span
+                className="relative z-10"
+                animate={{ color: active ? '#ffffff' : '#565353' }}
+                transition={{ duration: 0.15 }}
+              >
+                {item.icon}
+              </motion.span>
             </button>
           )
         })}
