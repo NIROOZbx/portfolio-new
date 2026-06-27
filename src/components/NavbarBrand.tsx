@@ -1,5 +1,5 @@
 import React from 'react'
-import avatarImg from '../assets/avatar.jpg'
+import avatarImg from '/avatar.jpg'
 
 interface NavbarBrandProps {
   onNavigateHome: () => void

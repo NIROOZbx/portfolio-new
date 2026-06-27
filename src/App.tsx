@@ -12,10 +12,12 @@ import { Analytics } from '@vercel/analytics/react'
 
 function App() {
   const [currentTab, setCurrentTab] = useState('home')
+  const [animKey, setAnimKey] = useState(0)
   const mainRef = useRef<HTMLElement>(null)
 
   const handleTabChange = (tab: string) => {
     setCurrentTab(tab)
+    setAnimKey(k => k + 1)
     // reset scroll when switching tabs
     if (mainRef.current) mainRef.current.scrollTop = 0
   }
@@ -66,15 +68,17 @@ function App() {
         className={`flex-1 min-h-0 px-6 box-border relative z-10 mobile-content-pad
           ${currentTab === 'home'
             ? 'overflow-hidden md:py-0 md:px-16 pt-[72px] md:pt-8'
-            : 'overflow-y-auto pt-[96px] md:pt-8 md:pb-16 md:px-16 md:py-10'}`}
+            : 'overflow-y-auto pt-[96px] md:pt-8 md:pb-10 md:px-16'}`}
       >
-        {renderContent()}
+        <div key={animKey} className={`tab-enter ${currentTab === 'home' ? 'h-full' : ''}`}>
+          {renderContent()}
 
-        {currentTab !== 'home' && (
-          <div className="md:hidden mt-3 pb-8 border-t border-[#e5e4e7]/40 pt-8 w-full flex justify-center">
-            <NavbarFooter />
-          </div>
-        )}
+          {currentTab !== 'home' && (
+            <div className="md:hidden mt-3 pb-8 border-t border-[#e5e4e7]/40 pt-8 w-full flex justify-center">
+              <NavbarFooter />
+            </div>
+          )}
+        </div>
 
       </main>
     </div>

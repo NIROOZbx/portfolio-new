@@ -21,6 +21,7 @@ const navItems = [
 
 const Navbar: React.FC<NavbarProps> = ({ currentTab, setCurrentTab, scrollRef }) => {
   const [hidden, setHidden] = useState(false)
+  const [tapped, setTapped] = useState<string | null>(null)
   const lastScrollY = useRef(0)
 
   useEffect(() => {
@@ -74,9 +75,13 @@ const Navbar: React.FC<NavbarProps> = ({ currentTab, setCurrentTab, scrollRef })
         {navItems.map((item) => {
           const active = currentTab === item.id
           return (
-            <button
+          <button
               key={item.id}
-              onClick={() => setCurrentTab(item.id)}
+              onClick={() => {
+                setCurrentTab(item.id)
+                setTapped(item.id)
+              }}
+              onAnimationEnd={() => setTapped(null)}
               aria-current={active ? 'page' : undefined}
               aria-label={item.label}
               className={`
@@ -85,6 +90,7 @@ const Navbar: React.FC<NavbarProps> = ({ currentTab, setCurrentTab, scrollRef })
                 transition-all duration-200 ease-out
                 cursor-pointer border-0 outline-none
                 focus-visible:ring-2 focus-visible:ring-element-black/40
+                ${tapped === item.id ? 'nav-pop' : ''}
                 ${active
                   ? 'bg-element-black text-primary-bg shadow-[0_2px_8px_rgba(0,0,0,0.25)]'
                   : 'bg-transparent text-text-subheading hover:text-element-black active:scale-90'}
