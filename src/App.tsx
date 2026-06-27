@@ -70,7 +70,7 @@ function App() {
             ? 'overflow-hidden md:py-0 md:px-16 pt-[72px] md:pt-8'
             : 'overflow-y-auto pt-[96px] md:pt-8 md:pb-10 md:px-16'}`}
       >
-        <div key={animKey} className={`tab-enter ${currentTab === 'home' ? 'h-full' : ''}`}>
+        <div key={animKey} className={`tab-enter ${currentTab === 'home' ? 'h-full flex justify-center' : ''}`}>
           {renderContent()}
 
           {currentTab !== 'home' && (
