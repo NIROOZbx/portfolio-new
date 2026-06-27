@@ -45,7 +45,7 @@ function App() {
   }
 
   return (
-    <div className="flex flex-col md:flex-row w-full h-screen h-dvh relative bg-primary-bg">
+    <div className="flex flex-col md:flex-row w-full h-svh relative bg-primary-bg">
       <SpeedInsights />
       <Analytics />
       {/* Viewport-wide Hero Background (only on Home tab) */}
