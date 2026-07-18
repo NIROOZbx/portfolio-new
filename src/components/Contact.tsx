@@ -67,27 +67,27 @@ const Contact: React.FC = () => {
         <div className="absolute inset-0 bg-radial-gradient from-white/[0.03] to-transparent pointer-events-none" />
 
         <div className="w-full max-w-2xl mx-auto relative z-10 flex flex-col items-center">
-          <h2 className="font-heading font-bold text-3xl md:text-[42px] text-white tracking-tight mb-4 text-center">
+          <h2 className="font-heading font-semibold text-3xl md:text-[42px] text-white tracking-tight mb-4 text-center">
             Ready to work with me?
           </h2>
-          <p className="font-sans text-sm md:text-base text-[#b3b3b3] max-w-xl leading-relaxed mb-8 text-center">
+          <p className="font-sans text-sm md:text-base text-[var(--color-gradient-end)] max-w-xl leading-relaxed mb-8 text-center">
             Whether you have a full project in mind or just a rough idea — drop a line below. I'll get back to you within 24 hours.
           </p>
 
           {status === 'success' ? (
             <div className="w-full bg-white/[0.02] border border-white/10 rounded-2xl p-8 flex flex-col items-center text-center animate-fade-in">
               <CheckCircle2 size={48} className="text-green-400 mb-4" />
-              <h3 className="font-heading font-bold text-2xl mb-2 text-white">
+              <h3 className="font-heading font-semibold text-2xl mb-2 text-white">
                 Message Sent!
               </h3>
-              <p className="font-sans text-sm text-[#b3b3b3] mb-6 max-w-md">
+              <p className="font-sans text-sm text-[var(--color-gradient-end)] mb-6 max-w-md">
                 {copied
                   ? "I've copied my email to your clipboard and opened your mail client with your message drafted. Talk soon!"
                   : "Thanks for reaching out! Your message was received and I'll get back to you shortly."}
               </p>
               <button
                 onClick={() => setStatus('idle')}
-                className="px-6 py-2.5 bg-white hover:bg-neutral-100 text-element-black font-sans text-sm font-semibold rounded-full transition-all cursor-pointer active:scale-[0.98]"
+                className="px-6 py-2.5 bg-white hover:bg-neutral-100 text-element-black font-sans text-sm font-semibold rounded-full transition-all duration-200 cursor-pointer active:scale-[0.98]"
               >
                 Send another message
               </button>
@@ -97,7 +97,7 @@ const Contact: React.FC = () => {
               {/* Row 1: Name and Email */}
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                 <div className="flex flex-col gap-1.5">
-                  <label htmlFor="name" className="font-sans text-[11px] font-bold text-neutral-400 uppercase tracking-wider">
+                  <label htmlFor="name" className="font-sans text-[11px] font-semibold text-neutral-400 uppercase tracking-wider">
                     Full Name
                   </label>
                   <input
@@ -112,7 +112,7 @@ const Contact: React.FC = () => {
                 </div>
 
                 <div className="flex flex-col gap-1.5">
-                  <label htmlFor="email" className="font-sans text-[11px] font-bold text-neutral-400 uppercase tracking-wider">
+                  <label htmlFor="email" className="font-sans text-[11px] font-semibold text-neutral-400 uppercase tracking-wider">
                     Email Address
                   </label>
                   <input
@@ -129,7 +129,7 @@ const Contact: React.FC = () => {
 
               {/* Row 2: Message */}
               <div className="flex flex-col gap-1.5">
-                <label htmlFor="message" className="font-sans text-[11px] font-bold text-neutral-400 uppercase tracking-wider">
+                <label htmlFor="message" className="font-sans text-[11px] font-semibold text-neutral-400 uppercase tracking-wider">
                   Tell me about your project
                 </label>
                 <textarea
@@ -147,7 +147,7 @@ const Contact: React.FC = () => {
               <button
                 type="submit"
                 disabled={isSending}
-                className="w-full flex items-center justify-center gap-2 px-6 py-3.5 bg-white hover:bg-neutral-100 disabled:bg-neutral-400 text-element-black font-sans text-sm font-bold rounded-xl transition-all cursor-pointer active:scale-[0.99] select-none"
+                className="w-full flex items-center justify-center gap-2 px-6 py-3.5 bg-white hover:bg-neutral-100 disabled:bg-neutral-400 text-element-black font-sans text-sm font-semibold rounded-full transition-all duration-200 cursor-pointer active:scale-[0.98] select-none"
               >
                 {isSending ? (
                   <span>Sending...</span>
@@ -160,7 +160,7 @@ const Contact: React.FC = () => {
               </button>
 
               {status === 'error' && (
-                <div className="flex items-center gap-2 px-4 py-3 bg-red-950/30 border border-red-500/20 text-red-300 text-xs rounded-xl mt-2 animate-fade-in">
+                <div className="flex items-center gap-2 px-4 py-3 bg-red-950/30 border border-red-500/20 text-red-300 text-xs rounded-[20px] mt-2 animate-fade-in">
                   <AlertCircle size={14} />
                   <span>Something went wrong. Please check or try again later.</span>
                 </div>

@@ -1,4 +1,4 @@
 User-agent: *
 Allow: /
 
-Sitemap: https://nirooz.vercel.app/sitemap.xml
+Sitemap: https://nirooz.xyz/sitemap.xml

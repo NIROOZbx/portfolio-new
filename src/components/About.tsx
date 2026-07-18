@@ -8,7 +8,7 @@ const About: React.FC = () => {
       <section className="text-left flex flex-col md:flex-row gap-12 w-full">
         {/* Left Column: About copy */}
         <div className="flex-grow md:w-[60%] flex flex-col gap-6">
-          <h1 className="font-heading font-semibold text-4xl md:text-[56px] text-text-heading leading-none tracking-tight mb-6 md:mb-2">
+          <h1 className="font-heading font-semibold text-4xl md:text-[56px] text-text-heading leading-[1.1] tracking-tight mb-6 md:mb-2">
             About
           </h1>
           
@@ -35,14 +35,14 @@ const About: React.FC = () => {
 
         {/* Right Column: Experience */}
         <div className="w-full md:w-[40%] flex flex-col">
-          <h2 className="font-heading font-semibold text-4xl md:text-[56px] text-text-heading leading-none tracking-tight mb-8">
+          <h2 className="font-heading font-semibold text-4xl md:text-[56px] text-text-heading leading-[1.1] tracking-tight mb-8">
             Experience
           </h2>
           
           {/* Experience Card */}
-          <div className="border border-[#e5e4e7] rounded-xl p-5 bg-white flex justify-between items-start hover:shadow-sm transition-all duration-300">
+          <div className="border border-border rounded-[20px] p-5 bg-white flex justify-between items-start hover:shadow-sm transition-all duration-200">
             <div className="flex flex-col text-left">
-              <h3 className="font-heading font-bold text-lg text-text-heading leading-tight">
+              <h3 className="font-heading font-semibold text-lg text-text-heading leading-[1.1]">
                 Bridgeon
               </h3>
               <span className="font-sans text-sm text-text-subheading mt-1.5">

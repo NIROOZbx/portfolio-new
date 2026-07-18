@@ -17,7 +17,7 @@ const NavbarBrand: React.FC<NavbarBrandProps> = ({ onNavigateHome }) => {
         alt="Nirooz avatar"
       />
       <div className="flex flex-col justify-center">
-        <h2 className="font-heading font-bold text-[17px] text-element-black leading-none tracking-tight uppercase transition-colors duration-200 group-hover:text-text-heading/85">
+        <h2 className="font-heading font-semibold text-[17px] text-element-black leading-none tracking-tight uppercase transition-colors duration-200 group-hover:text-text-heading/85">
           NIROOZ.DEV
         </h2>
         <span className="font-sans text-[13px] font-normal text-text-subheading mt-1">Full Stack Developer</span>

@@ -54,7 +54,7 @@ const ServiceCard: React.FC<ServiceCardProps> = ({ service }) => {
       {/* Light-Grey Image Container */}
       <div 
         ref={containerRef}
-        className="w-full aspect-square bg-card-bg rounded-[17px] mb-6 hover:scale-[1.01] hover:shadow-sm transition-all duration-300 select-none cursor-pointer relative overflow-hidden"
+        className="w-full aspect-square bg-card-bg rounded-[20px] mb-6 hover:scale-[1.02] hover:shadow-sm transition-all duration-200 select-none cursor-pointer relative overflow-hidden"
       >
         <div
           style={{
@@ -75,13 +75,13 @@ const ServiceCard: React.FC<ServiceCardProps> = ({ service }) => {
       </h3>
 
       <div className="mb-4">
-        <span className="px-3 py-1 bg-card-bg border border-[#e5e4e7]/40 text-text-subheading/80 rounded-full text-[11px] font-sans font-medium select-none">
+        <span className="px-3 py-1 bg-card-bg border border-border/40 text-text-subheading/80 rounded-full text-[11px] font-sans font-medium select-none">
           {service.badge}
         </span>
       </div>
 
       {/* Description */}
-      <p className="font-sans text-sm md:text-[14.5px] text-text-subheading leading-relaxed max-w-[320px]">
+      <p className="font-sans text-sm md:text-sm text-text-subheading leading-relaxed max-w-[320px]">
         {service.description}
       </p>
     </div>

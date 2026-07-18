@@ -21,12 +21,12 @@ const Home: React.FC<HomeProps> = ({ onViewProjects, onGetInTouch }) => {
                 </p>
 
                 {/* Line 2 (headline) */}
-                <h1 className="font-heading font-bold text-3xl sm:text-4xl md:text-[38px] leading-[1.15] tracking-tight text-element-black mb-2 md:mb-6 text-center text-balance mx-auto">
+                <h1 className="font-heading font-semibold text-3xl sm:text-4xl md:text-[38px] leading-[1.1] tracking-tight text-element-black mb-2 md:mb-6 text-center text-balance mx-auto">
                     <span className="md:whitespace-nowrap">Not every business problem needs a website.</span> <br className="hidden md:block" />I figure out <span className="bg-[linear-gradient(3.65deg,var(--color-gradient-start),var(--color-gradient-end))] bg-clip-text text-transparent pb-[2px] inline-block">what does.</span>
                 </h1>
 
                 {/* Line 3 (subtext) */}
-                <p className="text-[17px] font-normal leading-[1.6] text-text-subheading m-0">
+                <p className="text-[17px] font-normal leading-relaxed text-text-subheading m-0">
                     I find what's slowing you down, then build a fix that{" "}
                     <span className="relative inline-block whitespace-nowrap mx-2">
                         <span className="relative z-10 font-medium text-element-black">converts.</span>
@@ -82,7 +82,7 @@ const Home: React.FC<HomeProps> = ({ onViewProjects, onGetInTouch }) => {
                 </div>
 
                 {/* Mobile-only Footer inside Home page wrapper to fit perfectly */}
-                <div className="block md:hidden w-full border-t border-[#e5e4e7]/20 pt-4 mt-6">
+                <div className="block md:hidden w-full border-t border-border/20 pt-4 mt-6">
                     <NavbarFooter />
                 </div>
             </div>

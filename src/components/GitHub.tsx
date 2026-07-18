@@ -71,7 +71,7 @@ export default function GithubContributionCard() {
     };
 
     return (
-        <div className="w-full rounded-xl border border-[#e5e4e7]/60 bg-white p-3.5 select-none transition-all duration-300 hover:border-[#e5e4e7]/80 hover:shadow-sm">
+        <div className="w-full rounded-[20px] border border-border/60 bg-white p-3.5 select-none transition-all duration-200 hover:border-border/80 hover:shadow-sm">
             {/* Header section */}
             <div className="mb-3 flex items-start justify-between">
                 <div>
@@ -121,7 +121,7 @@ export default function GithubContributionCard() {
             {/* Color scale legend */}
             <div className="mt-2.5 flex items-center justify-end gap-1 text-[9px] text-text-subheading/50">
                 <span>Less</span>
-                <div className="h-2 w-2 rounded-[1px] bg-[#f5f5f7] border border-[#e5e4e7]/40" />
+                <div className="h-2 w-2 rounded-[1px] bg-[#f5f5f7] border border-border/40" />
                 <div className="h-2 w-2 rounded-[1px] bg-[#dcfce7]" />
                 <div className="h-2 w-2 rounded-[1px] bg-[#bbf7d0]" />
                 <div className="h-2 w-2 rounded-[1px] bg-[#86efac]" />

@@ -49,7 +49,7 @@ const Navbar: React.FC<NavbarProps> = ({ currentTab, setCurrentTab, scrollRef })
         <>
             {/* Mobile Top Header */}
             <header
-                className={`md:hidden w-full px-5 py-2 bg-primary-bg/90 backdrop-blur-xl border-b border-[#e5e4e7]/80 flex items-center fixed top-0 left-0 right-0 z-40 transition-transform duration-300 ease-in-out ${hidden ? '-translate-y-full' : 'translate-y-0'
+                className={`md:hidden w-full px-5 py-2 bg-primary-bg/90 backdrop-blur-xl border-b border-border/80 flex items-center fixed top-0 left-0 right-0 z-40 transition-transform duration-300 ease-in-out ${hidden ? '-translate-y-full' : 'translate-y-0'
                     }`}
             >
                 <NavbarBrand onNavigateHome={() => setCurrentTab('home')} />
@@ -127,7 +127,7 @@ const Navbar: React.FC<NavbarProps> = ({ currentTab, setCurrentTab, scrollRef })
             </nav>
 
             {/* Desktop Sidebar */}
-            <aside className="hidden md:flex flex-col w-[280px] min-w-[280px] h-screen py-6 px-6 bg-primary-bg border-r border-[#e5e4e7] box-border sticky top-0 z-30">
+            <aside className="hidden md:flex flex-col w-[280px] min-w-[280px] h-screen py-6 px-6 bg-primary-bg border-r border-border box-border sticky top-0 z-30">
                 <NavbarBrand onNavigateHome={() => setCurrentTab('home')} />
                 <NavItems currentTab={currentTab} setCurrentTab={setCurrentTab} />
                 <div className="flex-grow flex items-center justify-center my-6 w-full overflow-hidden">

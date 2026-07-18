@@ -35,7 +35,7 @@ const Pill: React.FC<PillProps> = ({ icon, label, className }) => {
 
 const AutomationIllustration: React.FC = () => {
   return (
-    <div className="w-[360px] h-[360px] bg-card-bg rounded-[17px] overflow-hidden relative select-none">
+    <div className="w-[360px] h-[360px] bg-card-bg rounded-[20px] overflow-hidden relative select-none">
       {/* Teal glow blob */}
       <div
         className="absolute"

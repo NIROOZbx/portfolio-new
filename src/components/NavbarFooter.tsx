@@ -46,14 +46,14 @@ const NavbarFooter: React.FC = () => {
             href={link.url}
             target="_blank"
             rel="noopener noreferrer"
-            className="opacity-60 hover:opacity-100 transition-all duration-250 hover:-translate-y-0.5 flex items-center justify-center"
+            className="opacity-60 hover:opacity-100 transition-all duration-200 hover:-translate-y-0.5 flex items-center justify-center"
             aria-label={link.label}
           >
             {link.icon}
           </a>
         ))}
       </div>
-      <p className="font-sans text-[12px] text-text-subheading opacity-80">Made with love © 2026 Nirooz</p>
+      <p className="font-sans text-[12px] text-text-subheading/80">Made with love © 2026 Nirooz</p>
     </div>
   )
 }

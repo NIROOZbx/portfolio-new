@@ -27,7 +27,7 @@ const ProgressIndicator: React.FC = () => {
 
   return (
     <div className="w-full max-w-[1215px] mx-auto text-center">
-      <h1 className="font-heading font-semibold text-3xl md:text-[42px] text-text-heading mb-10 text-center">
+      <h1 className="font-heading font-semibold text-3xl md:text-[42px] text-text-heading mb-10 text-center leading-[1.1] tracking-tight">
         Clear steps. Clean delivery
       </h1>
 
@@ -43,12 +43,12 @@ const ProgressIndicator: React.FC = () => {
               className="w-full max-w-[260px] lg:w-[201px] flex flex-col items-center gap-3 relative z-10"
             >
               {/* Icon Circle */}
-              <div className="w-[60px] h-[60px] flex items-center justify-center bg-white rounded-[30px] border-2 border-text-subheading p-4 shadow-sm hover:scale-105 transition-all duration-300 select-none">
+              <div className="w-[60px] h-[60px] flex items-center justify-center bg-white rounded-[30px] border-2 border-text-subheading p-4 shadow-sm hover:scale-[1.02] transition-all duration-200 select-none">
                 {step.icon}
               </div>
 
               {/* Title */}
-              <h3 className="font-sans font-semibold text-[20px] text-black leading-tight mt-1">
+              <h3 className="font-heading font-semibold text-[20px] text-text-heading leading-[1.1] mt-1">
                 {step.title}
               </h3>
 

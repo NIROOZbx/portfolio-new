@@ -74,7 +74,7 @@ function App() {
           {renderContent()}
 
           {currentTab !== 'home' && (
-            <div className="md:hidden mt-3 pb-8 border-t border-[#e5e4e7]/40 pt-8 w-full flex justify-center">
+            <div className="md:hidden mt-3 pb-8 border-t border-border/40 pt-8 w-full flex justify-center">
               <NavbarFooter />
             </div>
           )}
