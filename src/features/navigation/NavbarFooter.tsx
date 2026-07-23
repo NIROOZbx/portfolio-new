@@ -52,7 +52,7 @@ const NavbarFooter: React.FC = () => {
           </a>
         ))}
       </div>
-      <p className="font-sans text-[12px] text-text-subheading/80">Made with love © 2026 Nirooz</p>
+      <p className="font-sans text-[12px] text-text-subheading/80">Made with love © {new Date().getFullYear()} Nirooz</p>
     </div>
   )
 }

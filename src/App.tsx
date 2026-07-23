@@ -1,4 +1,4 @@
-import React, { useRef, useEffect, Suspense } from 'react'
+import  { useRef, useEffect, useState } from 'react'
 import { Routes, Route, useLocation, useNavigate } from 'react-router-dom'
 import Navbar from './features/navigation/Navbar'
 import NavbarFooter from './features/navigation/NavbarFooter'
@@ -6,14 +6,13 @@ import heroImg from './assets/hero2.webp'
 import { SpeedInsights } from '@vercel/speed-insights/react'
 import { Analytics } from '@vercel/analytics/react'
 
-// Lazy loaded route components for code splitting
-const Home = React.lazy(() => import('./features/home/Home'))
-const Services = React.lazy(() => import('./features/services/Services'))
-const About = React.lazy(() => import('./features/about/About'))
-const Projects = React.lazy(() => import('./features/projects/Projects'))
-const Designs = React.lazy(() => import('./features/designs/Designs'))
-const Contact = React.lazy(() => import('./features/contact/Contact'))
-const NotFound = React.lazy(() => import('./features/NotFound'))
+import Home from './features/home/Home'
+import Services from './features/services/Services'
+import About from './features/about/About'
+import Projects from './features/projects/Projects'
+import Designs from './features/designs/Designs'
+import Contact from './features/contact/Contact'
+import NotFound from './features/NotFound'
 
 function App() {
     const location = useLocation()
@@ -24,7 +23,10 @@ function App() {
     const currentPath = location.pathname.replace('/', '')
     const currentTab = currentPath === '' ? 'home' : currentPath
 
+    const [hideFooter, setHideFooter] = useState(false)
+
     useEffect(() => {
+        setHideFooter(false)
         if (mainRef.current) mainRef.current.scrollTop = 0
     }, [location.pathname])
 
@@ -60,23 +62,20 @@ function App() {
                         : 'overflow-y-auto pt-[96px] md:pt-8 md:pb-10 md:px-16'}`}
             >
                 <div key={location.pathname} className={`tab-enter ${currentTab === 'home' ? 'h-full flex justify-center' : ''}`}>
-                    <Suspense fallback={<div className="w-full h-full min-h-[50vh]"></div>}>
                         <Routes>
                             <Route path="/" element={<Home onViewProjects={() => navigate('/projects')} onGetInTouch={() => navigate('/contact')} />} />
                             <Route path="/services" element={<Services />} />
                             <Route path="/about" element={<About />} />
                             <Route path="/projects" element={<Projects />} />
-                            <Route path="/designs" element={<Designs />} />
+                            <Route path="/designs" element={<Designs onHideFooter={setHideFooter} />} />
                             <Route path="/contact" element={<Contact />} />
                             <Route path="*" element={<NotFound />} />
                         </Routes>
-                    </Suspense>
-
-                    {currentTab !== 'home' && (
-                        <div className="md:hidden mt-3 pb-8 border-t border-border/40 pt-8 w-full flex justify-center">
-                            <NavbarFooter />
-                        </div>
-                    )}
+                        {currentTab !== 'home' && !hideFooter && (
+                            <div className="md:hidden mt-3 pb-8 border-t border-border/40 pt-8 w-full flex justify-center">
+                                <NavbarFooter />
+                            </div>
+                        )}
                 </div>
 
             </main>

@@ -12,7 +12,11 @@ let cachedCounts: Record<string, number> | null = null
 let cachedPreviews: Record<string, string[]> | null = null
 const cachedDesigns: Record<string, DesignItem[]> = {}
 
-const Designs: React.FC = () => {
+interface DesignsProps {
+    onHideFooter?: (hide: boolean) => void
+}
+
+const Designs: React.FC<DesignsProps> = ({ onHideFooter }) => {
     const [folders, setFolders] = useState<DesignFolder[]>([])
     const [counts, setCounts] = useState<Record<string, number>>({})
     const [previews, setPreviews] = useState<Record<string, string[]>>({})
@@ -35,6 +39,12 @@ const Designs: React.FC = () => {
             setActiveDesign(designs[prevIndex])
         }
     }
+
+    useEffect(() => {
+        if (onHideFooter) {
+            onHideFooter(!!activeFolder)
+        }
+    }, [activeFolder, onHideFooter])
 
     // Fetch folders and counts on mount
     useEffect(() => {
@@ -60,6 +70,7 @@ const Designs: React.FC = () => {
                 if (dData) {
                     const newCounts: Record<string, number> = {}
                     const newPreviews: Record<string, string[]> = {}
+                    const newCachedDesigns: Record<string, DesignItem[]> = {}
 
                     dData.forEach(d => {
                         newCounts[d.folder_id] = (newCounts[d.folder_id] || 0) + 1
@@ -71,11 +82,16 @@ const Designs: React.FC = () => {
                             newPreviews[d.folder_id].push(d.image_url)
                         }
 
-                        // Preload Full Designs Cache!
-                        if (!cachedDesigns[d.folder_id]) {
-                            cachedDesigns[d.folder_id] = []
+                        // Preload Full Designs Cache safely
+                        if (!newCachedDesigns[d.folder_id]) {
+                            newCachedDesigns[d.folder_id] = []
                         }
-                        cachedDesigns[d.folder_id].push(d)
+                        newCachedDesigns[d.folder_id].push(d)
+                    })
+
+                    // Safely update global cache to prevent duplicates from React StrictMode
+                    Object.keys(newCachedDesigns).forEach(key => {
+                        cachedDesigns[key] = newCachedDesigns[key]
                     })
 
                     cachedCounts = newCounts
