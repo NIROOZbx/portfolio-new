@@ -91,13 +91,11 @@ const Designs: React.FC = () => {
     // Fetch designs when a folder is selected
     useEffect(() => {
         if (!activeFolder) return
+        
+        // Skip fetch if already cached (handled instantly by onClick)
+        if (cachedDesigns[activeFolder.id]) return
 
-        if (cachedDesigns[activeFolder.id]) {
-            setDesigns(cachedDesigns[activeFolder.id])
-            setIsLoadingDesigns(false)
-            return
-        }
-
+        setDesigns([]) // Prevent old designs from flashing
         setIsLoadingDesigns(true)
         fetchDesigns(activeFolder.id)
             .then((data) => {
@@ -180,7 +178,7 @@ const Designs: React.FC = () => {
                             }}
                             initial="hidden"
                             animate="show"
-                            exit={{ opacity: 0, y: -20 }}
+                            exit={{ opacity: 0, y: -10, transition: { duration: 0.15 } }}
                             className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-4 md:gap-6 pb-10"
                         >
                             {folders.map((folder) => (
@@ -196,7 +194,16 @@ const Designs: React.FC = () => {
                                         folder={folder}
                                         itemCount={counts[folder.id] || 0}
                                         previews={previews[folder.id] || []}
-                                        onClick={() => setActiveFolder(folder)}
+                                        onClick={() => {
+                                            if (cachedDesigns[folder.id]) {
+                                                setDesigns(cachedDesigns[folder.id])
+                                                setIsLoadingDesigns(false)
+                                            } else {
+                                                setDesigns([])
+                                                setIsLoadingDesigns(true)
+                                            }
+                                            setActiveFolder(folder)
+                                        }}
                                     />
                                 </motion.div>
                             ))}
