@@ -1,7 +1,6 @@
 import React, { useState, useEffect } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
 import { ArrowLeft } from 'lucide-react'
-import { fetchDesigns } from '../../services/designs'
 import { supabase } from '../../services/supabaseClient'
 import FolderCard from '../../components/FolderCard'
 import DesignModal from './DesignModal'
