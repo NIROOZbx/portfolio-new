@@ -41,7 +41,7 @@ const Navbar: React.FC<NavbarProps> = ({ currentTab, setCurrentTab, scrollRef })
                 className={`
           fixed left-1/2 -translate-x-1/2 z-50
           flex md:hidden items-center
-          p-1 gap-1 rounded-4xl
+          p-1 rounded-4xl
           bg-white/20 backdrop-blur-xl
           border border-white/30
           shadow-[0_8px_32px_rgba(0,0,0,0.12)]
