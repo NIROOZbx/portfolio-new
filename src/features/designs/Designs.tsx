@@ -40,7 +40,7 @@ const Designs: React.FC = () => {
     // Fetch folders and counts on mount
     useEffect(() => {
         const fetchFoldersAndCounts = async () => {
-            if (cachedFolders && cachedCounts && cachedPreviews) {
+            if (cachedFolders && cachedCounts && cachedPreviews && Object.keys(cachedDesigns).length > 0) {
                 setFolders(cachedFolders)
                 setCounts(cachedCounts)
                 setPreviews(cachedPreviews)
@@ -51,7 +51,7 @@ const Designs: React.FC = () => {
             try {
                 const [{ data: fData, error: fErr }, { data: dData }] = await Promise.all([
                     supabase.from('design_folders').select('*').order('display_order', { ascending: true }),
-                    supabase.from('designs').select('folder_id, image_url').order('created_at', { ascending: false })
+                    supabase.from('designs').select('*').order('created_at', { ascending: false })
                 ])
 
                 if (fErr) throw fErr
@@ -71,6 +71,12 @@ const Designs: React.FC = () => {
                         if (newPreviews[d.folder_id].length < 3 && d.image_url) {
                             newPreviews[d.folder_id].push(d.image_url)
                         }
+
+                        // Preload Full Designs Cache!
+                        if (!cachedDesigns[d.folder_id]) {
+                            cachedDesigns[d.folder_id] = []
+                        }
+                        cachedDesigns[d.folder_id].push(d)
                     })
 
                     cachedCounts = newCounts
@@ -88,23 +94,7 @@ const Designs: React.FC = () => {
         fetchFoldersAndCounts()
     }, [])
 
-    // Fetch designs when a folder is selected
-    useEffect(() => {
-        if (!activeFolder) return
-        
-        // Skip fetch if already cached (handled instantly by onClick)
-        if (cachedDesigns[activeFolder.id]) return
 
-        setDesigns([]) // Prevent old designs from flashing
-        setIsLoadingDesigns(true)
-        fetchDesigns(activeFolder.id)
-            .then((data) => {
-                cachedDesigns[activeFolder.id] = data
-                setDesigns(data)
-            })
-            .catch((err) => console.error('Error fetching designs:', err))
-            .finally(() => setIsLoadingDesigns(false))
-    }, [activeFolder])
 
     return (
         <section className="animate-fade-in text-left ">
@@ -195,13 +185,8 @@ const Designs: React.FC = () => {
                                         itemCount={counts[folder.id] || 0}
                                         previews={previews[folder.id] || []}
                                         onClick={() => {
-                                            if (cachedDesigns[folder.id]) {
-                                                setDesigns(cachedDesigns[folder.id])
-                                                setIsLoadingDesigns(false)
-                                            } else {
-                                                setDesigns([])
-                                                setIsLoadingDesigns(true)
-                                            }
+                                            setDesigns(cachedDesigns[folder.id] || [])
+                                            setIsLoadingDesigns(false)
                                             setActiveFolder(folder)
                                         }}
                                     />
