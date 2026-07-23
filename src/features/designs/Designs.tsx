@@ -155,7 +155,7 @@ const Designs: React.FC<DesignsProps> = ({ onHideFooter }) => {
             </div>
 
             <div className="-mx-6 px-6 md:mx-0 md:px-0">
-                <AnimatePresence mode="wait">
+                <AnimatePresence mode="popLayout">
                     {isLoading ? (
                         <motion.div
                             key="loading"
