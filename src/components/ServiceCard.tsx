@@ -2,12 +2,9 @@ import React, { useRef, useState, useEffect } from 'react'
 import UIUXIllustration from './UIUXIllustration'
 import WebDevIllustration from './WebDevIllustration'
 import AutomationIllustration from './AutomationIllustration'
+import type { ServiceItem } from '../types'
 
-export interface ServiceItem {
-  title: string
-  badge: string
-  description: string
-}
+export type { ServiceItem }
 
 interface ServiceCardProps {
   service: ServiceItem

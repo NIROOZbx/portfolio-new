@@ -1,16 +1,9 @@
 import React from 'react'
 import { ExternalLink } from 'lucide-react'
 import githubIcon from '../assets/square-github-brands-solid-full.svg'
+import type { ProjectItem } from '../types'
 
-export interface ProjectItem {
-  title: string
-  description1: string
-  description2: string
-  tags: string[]
-  githubUrl: string
-  liveUrl?: string
-  imageUrl: string
-}
+export type { ProjectItem }
 
 interface ProjectCardProps {
   project: ProjectItem
@@ -18,15 +11,16 @@ interface ProjectCardProps {
 
 const ProjectCard: React.FC<ProjectCardProps> = ({ project }) => {
   return (
-    <div className="bg-card-bg px-5 py-5 md:p-8 rounded-[20px] border border-border/40 flex flex-col md:flex-row gap-8 items-stretch max-w-[1215px] mx-auto hover:shadow-md transition-all duration-200">
+    <div className="group bg-card-bg px-5 py-5 md:p-8 rounded-[20px] border border-border/40 flex flex-col md:flex-row gap-8 items-stretch max-w-[1215px] mx-auto hover:shadow-[0_8px_30px_rgba(0,0,0,0.08)] hover:-translate-y-1.5 transition-all duration-300">
       {/* Left Column: Portrait Image */}
       <div className="w-full md:w-[42%] min-h-[320px] md:min-h-[440px] rounded-xl overflow-hidden relative select-none">
         <img
           src={project.imageUrl}
-          className="absolute inset-0 w-full h-full object-cover"
+          className="absolute inset-0 w-full h-full object-cover transition-transform duration-700 group-hover:scale-105"
           alt={`${project.title} screenshot`}
           loading="lazy"
         />
+        <div className="absolute inset-0 bg-black/5 opacity-0 group-hover:opacity-100 transition-opacity duration-300 pointer-events-none" />
       </div>
 
       {/* Right Column: Text Content */}

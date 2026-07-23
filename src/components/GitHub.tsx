@@ -1,4 +1,6 @@
-import { useEffect, useState, useRef } from "react";
+import { useEffect, useState } from "react";
+import { fetchContributions } from '../services/github';
+import { useDragScroll } from '../hooks/useDragScroll'
 
 interface Contribution {
     date: string;
@@ -10,21 +12,13 @@ export default function GithubContributionCard() {
     const [contributions, setContributions] = useState<Contribution[]>([]);
     const [total, setTotal] = useState(0);
 
-    const scrollContainerRef = useRef<HTMLDivElement>(null);
-    const [isMouseDown, setIsMouseDown] = useState(false);
-    const [startX, setStartX] = useState(0);
-    const [scrollLeftState, setScrollLeftState] = useState(0);
+    const { scrollRef, dragHandlers } = useDragScroll()
 
     useEffect(() => {
-        fetch("https://github-contributions-api.deno.dev/NIROOZbx.json")
-            .then((res) => res.json())
-            .then((data) => {
-                const rawContributions = data.contributions;
-                const flattened = Array.isArray(rawContributions)
-                    ? (Array.isArray(rawContributions[0]) ? rawContributions.flat() : rawContributions)
-                    : [];
-                setContributions(flattened);
-                setTotal(data.totalContributions || 0);
+        fetchContributions()
+            .then(({ contributions: c, total: t }) => {
+                setContributions(c);
+                setTotal(t);
             })
             .catch((err) => {
                 console.warn("Unable to load GitHub contributions:", err);
@@ -33,33 +27,10 @@ export default function GithubContributionCard() {
 
     // Scroll to the end (most recent contributions) when data is loaded
     useEffect(() => {
-        if (contributions.length > 0 && scrollContainerRef.current) {
-            scrollContainerRef.current.scrollLeft = scrollContainerRef.current.scrollWidth;
+        if (contributions.length > 0 && scrollRef.current) {
+            scrollRef.current.scrollLeft = scrollRef.current.scrollWidth;
         }
-    }, [contributions]);
-
-    const handleMouseDown = (e: React.MouseEvent) => {
-        if (!scrollContainerRef.current) return;
-        setIsMouseDown(true);
-        setStartX(e.pageX - scrollContainerRef.current.offsetLeft);
-        setScrollLeftState(scrollContainerRef.current.scrollLeft);
-    };
-
-    const handleMouseLeave = () => {
-        setIsMouseDown(false);
-    };
-
-    const handleMouseUp = () => {
-        setIsMouseDown(false);
-    };
-
-    const handleMouseMove = (e: React.MouseEvent) => {
-        if (!isMouseDown || !scrollContainerRef.current) return;
-        e.preventDefault();
-        const x = e.pageX - scrollContainerRef.current.offsetLeft;
-        const walk = (x - startX) * 1.5; // Drag sensitivity
-        scrollContainerRef.current.scrollLeft = scrollLeftState - walk;
-    };
+    }, [contributions, scrollRef]);
 
     // Custom light-theme green color mapping for premium monochromatic/green design
     const getContributionColor = (count: number) => {
@@ -95,13 +66,10 @@ export default function GithubContributionCard() {
 
             {/* Drag-to-swipe Scroll Container (Hides native scrollbar, supports grab-to-scroll) */}
             <div
-                ref={scrollContainerRef}
+                ref={scrollRef}
                 className="overflow-x-auto cursor-grab active:cursor-grabbing select-none w-full overscroll-x-contain [&::-webkit-scrollbar]:hidden"
                 style={{ scrollbarWidth: 'none', msOverflowStyle: 'none' }}
-                onMouseDown={handleMouseDown}
-                onMouseLeave={handleMouseLeave}
-                onMouseUp={handleMouseUp}
-                onMouseMove={handleMouseMove}
+                {...dragHandlers}
             >
                 <div
                     className="grid grid-flow-col grid-rows-7 gap-[2px] py-1"

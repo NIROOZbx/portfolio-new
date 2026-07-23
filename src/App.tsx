@@ -1,88 +1,91 @@
 import { useRef, useState } from 'react'
-import Navbar from './components/Navbar'
-import Home from './components/Home'
-import Services from './components/Services'
-import About from './components/About'
-import Projects from './components/Projects'
-import Contact from './components/Contact'
-import NavbarFooter from './components/NavbarFooter'
+import Navbar from './features/navigation/Navbar'
+import Home from './features/home/Home'
+import Services from './features/services/Services'
+import About from './features/about/About'
+import Projects from './features/projects/Projects'
+import Designs from './features/designs/Designs'
+import Contact from './features/contact/Contact'
+import NavbarFooter from './features/navigation/NavbarFooter'
 import heroImg from './assets/hero2.webp'
 import { SpeedInsights } from '@vercel/speed-insights/react'
 import { Analytics } from '@vercel/analytics/react'
 
 function App() {
-  const [currentTab, setCurrentTab] = useState('home')
-  const [animKey, setAnimKey] = useState(0)
-  const mainRef = useRef<HTMLElement>(null)
+    const [currentTab, setCurrentTab] = useState('home')
+    const [animKey, setAnimKey] = useState(0)
+    const mainRef = useRef<HTMLElement>(null)
 
-  const handleTabChange = (tab: string) => {
-    setCurrentTab(tab)
-    setAnimKey(k => k + 1)
-    // reset scroll when switching tabs
-    if (mainRef.current) mainRef.current.scrollTop = 0
-  }
-
-  const renderContent = () => {
-    switch (currentTab) {
-      case 'home':
-        return (
-          <Home
-            onViewProjects={() => setCurrentTab('projects')}
-            onGetInTouch={() => setCurrentTab('contact')}
-          />
-        )
-      case 'services':
-        return <Services />
-      case 'about':
-        return <About />
-      case 'projects':
-        return <Projects />
-      case 'contact':
-        return <Contact />
-      default:
-        return null
+    const handleTabChange = (tab: string) => {
+        setCurrentTab(tab)
+        setAnimKey(k => k + 1)
+        // reset scroll when switching tabs
+        if (mainRef.current) mainRef.current.scrollTop = 0
     }
-  }
 
-  return (
-    <div className="flex flex-col md:flex-row w-full h-svh relative bg-primary-bg">
-      <SpeedInsights />
-      <Analytics />
-      {/* Viewport-wide Hero Background (only on Home tab) */}
-      {currentTab === 'home' && (
-        <div className="absolute inset-0 w-full h-full pointer-events-none select-none overflow-hidden z-0">
-          <img
-            src={heroImg}
-            className="absolute -right-[5%] -bottom-[40%] -rotate-9 w-[140%] max-w-[700px] sm:max-w-[900px] md:w-[100%] md:max-w-[1200px] lg:w-[90%] lg:max-w-[1400px] xl:max-w-[1544px] h-auto max-w-none opacity-[0.4] md:opacity-[0.71] object-contain"
-            alt=""
-            loading="lazy"
-          />
-        </div>
-      )}
+    const renderContent = () => {
+        switch (currentTab) {
+            case 'home':
+                return (
+                    <Home
+                        onViewProjects={() => setCurrentTab('projects')}
+                        onGetInTouch={() => setCurrentTab('contact')}
+                    />
+                )
+            case 'services':
+                return <Services />
+            case 'about':
+                return <About />
+            case 'projects':
+                return <Projects />
+            case 'designs':
+                return <Designs />
+            case 'contact':
+                return <Contact />
+            default:
+                return null
+        }
+    }
 
-      <Navbar currentTab={currentTab} setCurrentTab={handleTabChange} scrollRef={mainRef} />
+    return (
+        <div className="flex flex-col md:flex-row w-full h-svh relative bg-primary-bg">
+            <SpeedInsights />
+            <Analytics />
+            {/* Viewport-wide Hero Background (only on Home tab) */}
+            {currentTab === 'home' && (
+                <div className="absolute inset-0 w-full h-full pointer-events-none select-none overflow-hidden z-0">
+                    <img
+                        src={heroImg}
+                        className="absolute -right-[5%] -bottom-[40%] -rotate-9 w-[140%] max-w-[700px] sm:max-w-[900px] md:w-[100%] md:max-w-[1200px] lg:w-[90%] lg:max-w-[1400px] xl:max-w-[1544px] h-auto max-w-none opacity-[0.4] md:opacity-[0.71] object-contain"
+                        alt=""
+                        loading="lazy"
+                    />
+                </div>
+            )}
 
-      {/* Main content */}
-      <main
-        ref={mainRef}
-        className={`flex-1 min-h-0 px-6 box-border relative z-10 mobile-content-pad
+            <Navbar currentTab={currentTab} setCurrentTab={handleTabChange} scrollRef={mainRef} />
+
+            {/* Main content */}
+            <main
+                ref={mainRef}
+                className={`flex-1 min-h-0 px-6 box-border relative z-10 mobile-content-pad
           ${currentTab === 'home'
-            ? 'overflow-hidden md:py-0 md:px-16 pt-[72px] md:pt-8'
-            : 'overflow-y-auto pt-[96px] md:pt-8 md:pb-10 md:px-16'}`}
-      >
-        <div key={animKey} className={`tab-enter ${currentTab === 'home' ? 'h-full flex justify-center' : ''}`}>
-          {renderContent()}
+                        ? 'overflow-hidden md:py-0 md:px-16 pt-[72px] md:pt-8'
+                        : 'overflow-y-auto pt-[96px] md:pt-8 md:pb-10 md:px-16'}`}
+            >
+                <div key={animKey} className={`tab-enter ${currentTab === 'home' ? 'h-full flex justify-center' : ''}`}>
+                    {renderContent()}
 
-          {currentTab !== 'home' && (
-            <div className="md:hidden mt-3 pb-8 border-t border-border/40 pt-8 w-full flex justify-center">
-              <NavbarFooter />
-            </div>
-          )}
+                    {currentTab !== 'home' && (
+                        <div className="md:hidden mt-3 pb-8 border-t border-border/40 pt-8 w-full flex justify-center">
+                            <NavbarFooter />
+                        </div>
+                    )}
+                </div>
+
+            </main>
         </div>
-
-      </main>
-    </div>
-  )
+    )
 }
 
 export default App
