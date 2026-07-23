@@ -1,50 +1,36 @@
-import { useRef, useState } from 'react'
+import React, { useRef, useEffect, Suspense } from 'react'
+import { Routes, Route, useLocation, useNavigate } from 'react-router-dom'
 import Navbar from './features/navigation/Navbar'
-import Home from './features/home/Home'
-import Services from './features/services/Services'
-import About from './features/about/About'
-import Projects from './features/projects/Projects'
-import Designs from './features/designs/Designs'
-import Contact from './features/contact/Contact'
 import NavbarFooter from './features/navigation/NavbarFooter'
 import heroImg from './assets/hero2.webp'
 import { SpeedInsights } from '@vercel/speed-insights/react'
 import { Analytics } from '@vercel/analytics/react'
 
+// Lazy loaded route components for code splitting
+const Home = React.lazy(() => import('./features/home/Home'))
+const Services = React.lazy(() => import('./features/services/Services'))
+const About = React.lazy(() => import('./features/about/About'))
+const Projects = React.lazy(() => import('./features/projects/Projects'))
+const Designs = React.lazy(() => import('./features/designs/Designs'))
+const Contact = React.lazy(() => import('./features/contact/Contact'))
+const NotFound = React.lazy(() => import('./features/NotFound'))
+
 function App() {
-    const [currentTab, setCurrentTab] = useState('home')
-    const [animKey, setAnimKey] = useState(0)
+    const location = useLocation()
+    const navigate = useNavigate()
     const mainRef = useRef<HTMLElement>(null)
 
-    const handleTabChange = (tab: string) => {
-        setCurrentTab(tab)
-        setAnimKey(k => k + 1)
-        // reset scroll when switching tabs
-        if (mainRef.current) mainRef.current.scrollTop = 0
-    }
+    // Derive currentTab from URL for styling
+    const currentPath = location.pathname.replace('/', '')
+    const currentTab = currentPath === '' ? 'home' : currentPath
 
-    const renderContent = () => {
-        switch (currentTab) {
-            case 'home':
-                return (
-                    <Home
-                        onViewProjects={() => setCurrentTab('projects')}
-                        onGetInTouch={() => setCurrentTab('contact')}
-                    />
-                )
-            case 'services':
-                return <Services />
-            case 'about':
-                return <About />
-            case 'projects':
-                return <Projects />
-            case 'designs':
-                return <Designs />
-            case 'contact':
-                return <Contact />
-            default:
-                return null
-        }
+    useEffect(() => {
+        if (mainRef.current) mainRef.current.scrollTop = 0
+    }, [location.pathname])
+
+    const handleTabChange = (tab: string) => {
+        if (tab === 'home') navigate('/')
+        else navigate('/' + tab)
     }
 
     return (
@@ -58,7 +44,7 @@ function App() {
                         src={heroImg}
                         className="absolute -right-[5%] -bottom-[40%] -rotate-9 w-[140%] max-w-[700px] sm:max-w-[900px] md:w-[100%] md:max-w-[1200px] lg:w-[90%] lg:max-w-[1400px] xl:max-w-[1544px] h-auto max-w-none opacity-[0.4] md:opacity-[0.71] object-contain"
                         alt=""
-                        loading="lazy"
+                        fetchPriority="high"
                     />
                 </div>
             )}
@@ -73,8 +59,18 @@ function App() {
                         ? 'overflow-hidden md:py-0 md:px-16 pt-[72px] md:pt-8'
                         : 'overflow-y-auto pt-[96px] md:pt-8 md:pb-10 md:px-16'}`}
             >
-                <div key={animKey} className={`tab-enter ${currentTab === 'home' ? 'h-full flex justify-center' : ''}`}>
-                    {renderContent()}
+                <div key={location.pathname} className={`tab-enter ${currentTab === 'home' ? 'h-full flex justify-center' : ''}`}>
+                    <Suspense fallback={<div className="w-full h-full min-h-[50vh]"></div>}>
+                        <Routes>
+                            <Route path="/" element={<Home onViewProjects={() => navigate('/projects')} onGetInTouch={() => navigate('/contact')} />} />
+                            <Route path="/services" element={<Services />} />
+                            <Route path="/about" element={<About />} />
+                            <Route path="/projects" element={<Projects />} />
+                            <Route path="/designs" element={<Designs />} />
+                            <Route path="/contact" element={<Contact />} />
+                            <Route path="*" element={<NotFound />} />
+                        </Routes>
+                    </Suspense>
 
                     {currentTab !== 'home' && (
                         <div className="md:hidden mt-3 pb-8 border-t border-border/40 pt-8 w-full flex justify-center">

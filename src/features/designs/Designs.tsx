@@ -1,11 +1,17 @@
 import React, { useState, useEffect } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
-import { ArrowLeft, Loader2 } from 'lucide-react'
+import { ArrowLeft } from 'lucide-react'
 import { fetchDesigns } from '../../services/designs'
 import { supabase } from '../../services/supabaseClient'
 import FolderCard from '../../components/FolderCard'
 import DesignModal from './DesignModal'
 import type { DesignFolder, DesignItem } from '../../types/designs'
+
+// In-memory cache to prevent re-fetching from Supabase when returning to this tab or folder
+let cachedFolders: DesignFolder[] | null = null
+let cachedCounts: Record<string, number> | null = null
+let cachedPreviews: Record<string, string[]> | null = null
+const cachedDesigns: Record<string, DesignItem[]> = {}
 
 const Designs: React.FC = () => {
   const [folders, setFolders] = useState<DesignFolder[]>([])
@@ -34,6 +40,14 @@ const Designs: React.FC = () => {
   // Fetch folders and counts on mount
   useEffect(() => {
     const fetchFoldersAndCounts = async () => {
+      if (cachedFolders && cachedCounts && cachedPreviews) {
+        setFolders(cachedFolders)
+        setCounts(cachedCounts)
+        setPreviews(cachedPreviews)
+        setIsLoading(false)
+        return
+      }
+
       try {
         const [{ data: fData, error: fErr }, { data: dData }] = await Promise.all([
           supabase.from('design_folders').select('*').order('display_order', { ascending: true }),
@@ -41,7 +55,8 @@ const Designs: React.FC = () => {
         ])
         
         if (fErr) throw fErr
-        setFolders(fData || [])
+        cachedFolders = fData || []
+        setFolders(cachedFolders)
 
         if (dData) {
           const newCounts: Record<string, number> = {}
@@ -58,8 +73,10 @@ const Designs: React.FC = () => {
             }
           })
           
-          setCounts(newCounts)
-          setPreviews(newPreviews)
+          cachedCounts = newCounts
+          cachedPreviews = newPreviews
+          setCounts(cachedCounts)
+          setPreviews(cachedPreviews)
         }
       } catch (err) {
         console.error('Error fetching folders:', err)
@@ -75,9 +92,18 @@ const Designs: React.FC = () => {
   useEffect(() => {
     if (!activeFolder) return
     
+    if (cachedDesigns[activeFolder.id]) {
+      setDesigns(cachedDesigns[activeFolder.id])
+      setIsLoadingDesigns(false)
+      return
+    }
+
     setIsLoadingDesigns(true)
     fetchDesigns(activeFolder.id)
-      .then(setDesigns)
+      .then((data) => {
+        cachedDesigns[activeFolder.id] = data
+        setDesigns(data)
+      })
       .catch((err) => console.error('Error fetching designs:', err))
       .finally(() => setIsLoadingDesigns(false))
   }, [activeFolder])
@@ -133,9 +159,16 @@ const Designs: React.FC = () => {
               initial={{ opacity: 0 }}
               animate={{ opacity: 1 }}
               exit={{ opacity: 0 }}
-              className="w-full min-h-[50vh] flex items-center justify-center text-text-subheading"
+              className="w-full min-h-[50vh]"
             >
-              <Loader2 className="animate-spin" size={32} />
+              <div className="flex flex-wrap gap-6 md:gap-10 pb-10">
+                {Array.from({ length: 8 }).map((_, idx) => (
+                  <div key={idx} className="w-[140px] md:w-[180px] shrink-0 animate-pulse">
+                    <div className="w-full aspect-square md:aspect-[4/3] bg-black/5 rounded-2xl mb-3"></div>
+                    <div className="h-5 bg-black/5 rounded-full w-2/3 mx-auto"></div>
+                  </div>
+                ))}
+              </div>
             </motion.div>
           ) : !activeFolder ? (
             /* FOLDERS GRID */
@@ -150,7 +183,7 @@ const Designs: React.FC = () => {
               exit={{ opacity: 0, y: -20 }}
               className="flex flex-wrap gap-6 md:gap-10 pb-10"
             >
-              {folders.map((folder, idx) => (
+              {folders.map((folder) => (
                 <motion.div
                   key={folder.id}
                   className="w-[140px] md:w-[180px] shrink-0"
@@ -161,7 +194,6 @@ const Designs: React.FC = () => {
                 >
                   <FolderCard 
                     folder={folder} 
-                    index={idx}
                     itemCount={counts[folder.id] || 0}
                     previews={previews[folder.id] || []}
                     onClick={() => setActiveFolder(folder)} 
@@ -172,7 +204,6 @@ const Designs: React.FC = () => {
                 <div className="col-span-full w-full max-w-sm mx-auto mt-10 pointer-events-none opacity-60">
                   <FolderCard 
                     folder={{ id: 'empty', title: 'Empty', display_order: 0 }} 
-                    index={0} 
                     itemCount={0} 
                     onClick={() => {}} 
                   />
@@ -190,12 +221,19 @@ const Designs: React.FC = () => {
               transition={{ duration: 0.3 }}
             >
               {isLoadingDesigns ? (
-                <div className="w-full min-h-[50vh] flex flex-col items-center justify-center text-text-subheading">
-                  <Loader2 className="animate-spin mb-4" size={32} />
+                <div className="w-full min-h-[50vh]">
+                  <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6 pb-10">
+                    {Array.from({ length: 8 }).map((_, idx) => (
+                      <div key={idx} className="rounded-2xl bg-white border border-black/5 p-3 flex flex-col animate-pulse">
+                        <div className="rounded-xl bg-black/5 aspect-[4/3] shrink-0 w-full mb-4"></div>
+                        <div className="h-5 bg-black/5 rounded w-3/4 mb-1"></div>
+                      </div>
+                    ))}
+                  </div>
                 </div>
               ) : designs.length > 0 ? (
                 <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6 pb-10">
-                  {designs.map((design, idx) => (
+                  {designs.map((design) => (
                     <motion.div
                       key={design.id}
                       className="cursor-pointer group rounded-2xl bg-white shadow-[0_2px_10px_rgba(0,0,0,0.03)] hover:shadow-[0_8px_30px_rgba(0,0,0,0.08)] border border-black/5 transition-all p-3 flex flex-col"

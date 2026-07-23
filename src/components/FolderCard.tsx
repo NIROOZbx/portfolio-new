@@ -5,15 +5,12 @@ import type { DesignFolder } from '../types/designs'
 
 interface FolderCardProps {
   folder: DesignFolder
-  index: number
   onClick: () => void
   itemCount?: number
   previews?: string[]
 }
 
-const FolderCard: React.FC<FolderCardProps> = ({ folder, index, onClick, itemCount = 0, previews = [] }) => {
-  const formattedNumber = (index + 1).toString().padStart(2, '0')
-
+const FolderCard: React.FC<FolderCardProps> = ({ folder, onClick, itemCount = 0, previews = [] }) => {
   return (
     <motion.div
       onClick={onClick}

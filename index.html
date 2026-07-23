@@ -2,39 +2,44 @@
 <html lang="en">
 
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
-  <link rel="icon" type="image/png" sizes="96x96" href="/favicon.png">
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
+    <link rel="icon" type="image/png" sizes="96x96" href="/favicon.png">
 
 
-  <title>Nirooz VP — Full-Stack Developer | UI/UX, Web Dev & Automation</title>
+    <title>Nirooz VP — Full-Stack Developer | UI/UX, Web Dev & Automation</title>
 
-  <meta name="description"
-    content="Nirooz VP is a full-stack developer crafting high-converting websites, UI/UX design, and automation. Let's build something great together." />
+    <meta name="description"
+        content="Nirooz — Full-stack developer specializing in premium UI/UX, high-performance web apps, and business automation. Open to full-time, freelance & collaborations." />
 
-  <meta property="og:title" content="Nirooz VP — Full-Stack Developer | UI/UX, Web Dev & Automation" />
-  <meta property="og:description" content="Nirooz VP is a full-stack developer crafting high-converting websites, UI/UX design, and automation. Let's build something great together." />
-  <meta property="og:image" content="https://nirooz.xyz/og-image.jpg" />
-  <meta property="og:url" content="https://nirooz.xyz" />
-  <meta property="og:type" content="website" />
+    <meta property="og:title" content="Nirooz VP — Full-Stack Developer | UI/UX, Web Dev & Automation" />
 
-  <meta name="twitter:card" content="summary_large_image" />
-  <meta name="twitter:title" content="Nirooz VP — Full-Stack Developer | UI/UX, Web Dev & Automation" />
-  <meta name="twitter:description" content="Nirooz VP is a full-stack developer crafting high-converting websites, UI/UX design, and automation. Let's build something great together." />
-  <meta name="twitter:image" content="https://nirooz.xyz/og-image.jpg" />
+    <meta property="og:description"
+        content="Nirooz — Full-stack developer specializing in premium UI/UX, high-performance web apps, and business automation. Open to full-time, freelance & collaborations." />
 
-  <link rel="canonical" href="https://nirooz.xyz" />
+    <meta property="og:image" content="https://nirooz.xyz/og-image.jpg" />
+    <meta property="og:url" content="https://nirooz.xyz" />
+    <meta property="og:type" content="website" />
 
-  <link rel="preconnect" href="https://github-contributions-api.deno.dev" />
-  <link rel="preconnect" href="https://cal.com" />
-  <link rel="preconnect" href="https://api.emailjs.com" />
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:title" content="Nirooz VP — Full-Stack Developer | UI/UX, Web Dev & Automation" />
 
-  <script type="application/ld+json">
+    <meta name="twitter:description"
+        content="Nirooz — Full-stack developer specializing in premium UI/UX, high-performance web apps, and business automation. Open to full-time, freelance & collaborations." />
+    <meta name="twitter:image" content="https://nirooz.xyz/og-image.jpg" />
+
+
+    <link rel="preconnect" href="https://github-contributions-api.deno.dev" />
+    <link rel="preconnect" href="https://cal.com" />
+    <link rel="preconnect" href="https://api.emailjs.com" />
+
+    <script type="application/ld+json">
     {
       "@context": "https://schema.org",
       "@graph": [
         {
           "@type": "Person",
+          "@id": "https://nirooz.xyz/#person",
           "name": "Nirooz VP",
           "url": "https://nirooz.xyz",
           "image": "https://nirooz.xyz/og-image.jpg",
@@ -48,27 +53,31 @@
         },
         {
           "@type": "WebSite",
+          "@id": "https://nirooz.xyz/#website",
           "name": "Nirooz VP — Full-Stack Developer Portfolio",
           "url": "https://nirooz.xyz",
-          "description": "Full-stack developer crafting high-converting websites, UI/UX design, web development, and automation solutions."
+          "description": "Nirooz — Full-stack developer specializing in premium UI/UX, high-performance web apps, and business automation. Available for: Full-time roles · Freelance · Collaborations.",
+          "author": { "@id": "https://nirooz.xyz/#person" }
         },
         {
           "@type": "ProfessionalService",
+          "@id": "https://nirooz.xyz/#service",
           "name": "Nirooz VP — Web Development & UI/UX",
           "url": "https://nirooz.xyz",
-          "description": "Freelance full-stack developer available for web development, UI/UX design, and automation projects worldwide.",
+          "description": "Full-stack developer turning ideas into polished, high-performance digital products. Available for: Full-time roles · Freelance · Collaborations",
           "areaServed": "Worldwide",
           "priceRange": "$$",
-          "serviceType": ["Web Development", "UI/UX Design", "Automation", "Full-Stack Development"]
+          "serviceType": ["Web Development", "UI/UX Design", "Automation", "Full-Stack Development"],
+          "provider": { "@id": "https://nirooz.xyz/#person" }
         }
       ]
     }
-  </script>
+    </script>
 </head>
 
 <body>
-  <div id="root"></div>
-  <script type="module" src="/src/main.tsx"></script>
+    <div id="root"></div>
+    <script type="module" src="/src/main.tsx"></script>
 </body>
 
 </html>
