@@ -46,7 +46,7 @@ const About: React.FC = () => {
                 Bridgeon
               </h3>
               <span className="font-sans text-sm text-text-subheading mt-1.5">
-                Full stack Intern
+                Full stack Trainee
               </span>
             </div>
             <span className="font-sans text-[13px] text-text-subheading/60 font-medium select-none">
