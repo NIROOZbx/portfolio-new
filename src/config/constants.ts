@@ -19,11 +19,11 @@ export const SITE_CONFIG = {
     },
     envoy: {
       github: 'https://github.com/NIROOZbx/notification-engine',
-      live: 'https://envoy-client.vercel.app'
+      live: 'https://envoy.nirooz.xyz'
     },
     relay: {
       github: 'https://github.com/NIROOZbx/chat-app-backend',
-      live: 'https://chat-app-frontend-pink-phi.vercel.app/'
+      live: 'https://relay.nirooz.xyz/'
     }
   }
 }
