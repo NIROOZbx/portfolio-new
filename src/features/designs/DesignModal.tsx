@@ -130,17 +130,17 @@ const DesignModal: React.FC<DesignModalProps> = ({ design, designs = [], onClose
           )}
 
           {/* Image Container */}
-          <div className="relative rounded-xl bg-[#f5f5f5] overflow-hidden flex justify-center items-center [transform:translateZ(0)]">
+          <div className="relative rounded-xl bg-[#f5f5f5] overflow-hidden flex justify-center items-center [transform:translateZ(0)] shrink min-h-0">
              <img 
                src={design.image_url || 'https://placehold.co/1200x800/1e1e1e/565353?text=No+Image'} 
                alt={design.title}
                onError={(e) => { e.currentTarget.src = 'https://placehold.co/1200x800/1e1e1e/565353?text=No+Image' }}
-               className="w-auto h-auto max-w-full max-h-[80vh] object-contain rounded-xl block"
+               className="w-auto h-auto max-w-full max-h-[calc(90vh-120px)] object-contain rounded-xl block"
              />
           </div>
 
           {/* Rating Footer Integrated into Card */}
-          <div className="mt-4 px-4 pb-2 flex items-center justify-between">
+          <div className="mt-4 px-4 pb-2 flex items-center justify-between shrink-0">
             <div className="flex flex-col">
               <span className="font-heading font-bold text-2xl text-element-black leading-none">
                 {totalVotes > 0 ? `${approvalRating}%` : '---'}
