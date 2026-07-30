@@ -2,7 +2,7 @@ import  { useRef, useEffect, useState } from 'react'
 import { Routes, Route, useLocation, useNavigate } from 'react-router-dom'
 import Navbar from './features/navigation/Navbar'
 import NavbarFooter from './features/navigation/NavbarFooter'
-import heroImg from './assets/hero2.webp'
+import heroImg from './assets/hero.webp'
 import { SpeedInsights } from '@vercel/speed-insights/react'
 import { Analytics } from '@vercel/analytics/react'
 
@@ -44,7 +44,7 @@ function App() {
                 <div className="absolute inset-0 w-full h-full pointer-events-none select-none overflow-hidden z-0">
                     <img
                         src={heroImg}
-                        className="absolute -right-[5%] -bottom-[40%] -rotate-9 w-[140%] max-w-[700px] sm:max-w-[900px] md:w-[100%] md:max-w-[1200px] lg:w-[90%] lg:max-w-[1400px] xl:max-w-[1544px] h-auto max-w-none opacity-[0.4] md:opacity-[0.71] object-contain"
+                        className="absolute right-[-3%] bottom-[-23%] -rotate-13  w-[140%] max-w-[700px] sm:max-w-[900px] md:w-[100%] md:max-w-[1200px] lg:w-[90%] lg:max-w-[1400px] xl:max-w-[1544px] h-auto max-w-none opacity-[0.4] md:opacity-[0.71] object-contain"
                         alt=""
                         fetchPriority="high"
                     />
