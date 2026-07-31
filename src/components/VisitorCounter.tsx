@@ -1,5 +1,4 @@
 import { useEffect, useState } from 'react'
-import { Eye } from 'lucide-react'
 import CountUp from './CountUp'
 import { getAndIncrementTotalViews } from '../services/visitorStats'
 
