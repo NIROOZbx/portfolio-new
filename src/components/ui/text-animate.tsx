@@ -158,7 +158,7 @@ const defaultItemAnimationVariants: Record<
         opacity: 1,
         filter: "blur(0px)",
         transition: {
-          duration: 0.3,
+          duration: 0.8,
         },
       },
       exit: {

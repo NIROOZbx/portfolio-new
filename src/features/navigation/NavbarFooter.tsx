@@ -1,7 +1,6 @@
 import React from 'react'
 import { Mail } from 'lucide-react'
 import { SITE_CONFIG } from '../../config/constants'
-import VisitorCounter from '../../components/VisitorCounter'
 
 import githubIcon from '../../assets/square-github-brands-solid-full.svg'
 import linkedinIcon from '../../assets/linkedin-brands-solid-full.svg'
@@ -39,9 +38,6 @@ const NavbarFooter: React.FC = () => {
 
   return (
     <div className="flex flex-col gap-3 md:mt-auto items-center md:items-start">
-        <div className="flex items-center gap-2">
-        <VisitorCounter />
-      </div>
       <div className="flex gap-4">
         {socialLinks.map((link, idx) => (
           <a

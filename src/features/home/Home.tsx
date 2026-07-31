@@ -3,6 +3,7 @@ import { motion } from 'framer-motion'
 import { ArrowLeft } from 'lucide-react'
 import GithubContributionCard from '../../components/GitHub'
 import NavbarFooter from '../navigation/NavbarFooter'
+import VisitorCounter from '../../components/VisitorCounter'
 
 interface HomeProps {
     onViewProjects: () => void
@@ -75,6 +76,11 @@ const Home: React.FC<HomeProps> = ({ onViewProjects, onGetInTouch }) => {
                     >
                         View Projects
                     </button>
+                </div>
+
+                {/* Central Visitor Counter */}
+                <div className="flex justify-center items-center mb-6">
+                    <VisitorCounter />
                 </div>
 
                 {/* GitHub Contributions Card on Mobile only (No page scroll needed) */}

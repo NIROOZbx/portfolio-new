@@ -18,7 +18,7 @@ const NavbarBrand: React.FC<NavbarBrandProps> = ({ onNavigateHome }) => {
   useEffect(() => {
     const interval = setInterval(() => {
       setTitleIndex((prevIndex) => (prevIndex + 1) % TITLES.length)
-    }, 3200)
+    }, 4000)
     return () => clearInterval(interval)
   }, [])
 
@@ -39,11 +39,11 @@ const NavbarBrand: React.FC<NavbarBrandProps> = ({ onNavigateHome }) => {
         <div className="h-5 mt-1 overflow-hidden flex items-center">
           <TextAnimate
             key={TITLES[titleIndex]}
-            animation="blurInUp"
+            animation="blurIn"
             by="character"
-            duration={0.5}
+            duration={1.2}
             startOnView={false}
-            className="font-sans text-[12px] font-normal text-text-subheading"
+            className="font-sans text-[12px]  text-text-subheading"
           >
             {TITLES[titleIndex]}
           </TextAnimate>

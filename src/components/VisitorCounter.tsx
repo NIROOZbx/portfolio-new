@@ -17,20 +17,25 @@ export default function VisitorCounter() {
     if (views === null) return null
 
     return (
-        <div className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full bg-black/[0.03] border border-black/[0.06] text-text-subheading/80 text-[11px] font-sans font-medium transition-all select-none hover:bg-black/[0.05]">
-            <Eye size={12} className="opacity-70 text-element-black" strokeWidth={2.2} />
+        <div className="inline-flex items-center gap-2.5">
+            {/* Live Pulsing Emerald Dot */}
+            <span className="relative flex h-2 w-2">
+                <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-emerald-400 opacity-75"></span>
+                <span className="relative inline-flex rounded-full h-2 w-2 bg-emerald-500"></span>
+            </span>
 
-            <span className="inline-flex items-baseline font-sans text-[11px] font-medium text-text-subheading/85 gap-1">
-                Visitor #
+            {/* Counter Text */}
+            <span className="inline-flex items-baseline gap-1.5 font-sans text-[10px] font-medium text-text-subheading/90">
                 <CountUp
                     from={0}
                     to={views}
                     separator=","
                     direction="up"
-                    duration={1.2}
+                    duration={1.5}
                     enableBlur={true}
-                    className="inline-block tracking-tight font-medium"
+                    className="font-semibold text-element-black text-[10px] tracking-tight group-hover:text-black transition-colors"
                 />
+                <span>visitors</span>
             </span>
         </div>
     )
