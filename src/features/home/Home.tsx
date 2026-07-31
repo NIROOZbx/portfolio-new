@@ -16,6 +16,7 @@ const Home: React.FC<HomeProps> = ({ onViewProjects, onGetInTouch }) => {
             {/* Centered Hero Content */}
             <div className="max-w-[800px] mx-auto px-4 py-12 text-center relative z-10 w-full flex flex-col items-center justify-center">
                 {/* Line 1 (eyebrow) */}
+                
                 <p className="text-[16px] font-medium mb-3 bg-[linear-gradient(3.65deg,var(--color-gradient-start),var(--color-gradient-end))] bg-clip-text text-transparent inline-block">
                     Hi, I'm Nirooz
                 </p>
@@ -54,7 +55,7 @@ const Home: React.FC<HomeProps> = ({ onViewProjects, onGetInTouch }) => {
                 </p>
 
                 {/* Central CTA Buttons */}
-                <div className="flex flex-col sm:flex-row gap-4 items-center justify-center w-full mt-8 mb-4 md:mb-8">
+                <div className="flex flex-row gap-3 sm:gap-4 items-center justify-center w-full mt-8 mb-8">
                     {/* Get in touch CTA (Black Pill Button) */}
                     <button
                         onClick={onGetInTouch}
@@ -77,12 +78,12 @@ const Home: React.FC<HomeProps> = ({ onViewProjects, onGetInTouch }) => {
                 </div>
 
                 {/* GitHub Contributions Card on Mobile only (No page scroll needed) */}
-                <div className="block md:hidden w-full max-w-md mx-auto">
+                <div className="block md:hidden w-full max-w-md mx-auto mb-8">
                     <GithubContributionCard />
                 </div>
 
                 {/* Mobile-only Footer inside Home page wrapper to fit perfectly */}
-                <div className="block md:hidden w-full border-t border-border/20 pt-4 mt-6">
+                <div className="block md:hidden w-full border-t border-border/20 pt-4 mt-2">
                     <NavbarFooter />
                 </div>
             </div>
