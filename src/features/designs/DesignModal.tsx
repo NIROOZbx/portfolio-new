@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react'
 import { createPortal } from 'react-dom'
 import { motion, AnimatePresence } from 'framer-motion'
 import { X, ThumbsUp, ThumbsDown, ChevronLeft, ChevronRight } from 'lucide-react'
-import { voteDesign } from '../../services/designs'
+import { voteDesign, fetchUserVote } from '../../services/designs'
 
 import type { DesignItem } from '../../types/designs'
 
@@ -16,12 +16,17 @@ interface DesignModalProps {
 const DesignModal: React.FC<DesignModalProps> = ({ design, designs = [], onClose, onNavigate }) => {
   const [likes, setLikes] = useState(0)
   const [dislikes, setDislikes] = useState(0)
+  const [userVote, setUserVote] = useState<'like' | 'dislike' | null>(null)
+  const [isVoting, setIsVoting] = useState(false)
 
   useEffect(() => {
     if (design) {
-      setLikes(design.likes_count || 0)
-      setDislikes(design.dislikes_count || 0)
+      setLikes(Math.max(0, design.likes_count || 0))
+      setDislikes(Math.max(0, design.dislikes_count || 0))
       
+      // Load vote from DB or localStorage using visitor_id
+      fetchUserVote(design.id).then(vote => setUserVote(vote))
+
       const handleKeyDown = (e: KeyboardEvent) => {
         if (e.key === 'ArrowRight' && onNavigate) onNavigate('next')
         if (e.key === 'ArrowLeft' && onNavigate) onNavigate('prev')
@@ -44,27 +49,43 @@ const DesignModal: React.FC<DesignModalProps> = ({ design, designs = [], onClose
   const approvalRating = totalVotes > 0 ? Math.round((likes / totalVotes) * 100) : 0
 
   const handleVote = async (type: 'like' | 'dislike') => {
-    const currentVote = localStorage.getItem(`voted_${design.id}`)
+    if (isVoting) return
+    setIsVoting(true)
+
+    const currentVote = userVote
 
     // Retract vote if clicking the same one again
     if (currentVote === type) {
-      if (type === 'like') setLikes(prev => prev - 1)
-      else setDislikes(prev => prev - 1)
+      if (type === 'like') {
+        setLikes(prev => Math.max(0, prev - 1))
+        design.likes_count = Math.max(0, (design.likes_count || 0) - 1)
+      } else {
+        setDislikes(prev => Math.max(0, prev - 1))
+        design.dislikes_count = Math.max(0, (design.dislikes_count || 0) - 1)
+      }
       
+      setUserVote(null)
       localStorage.removeItem(`voted_${design.id}`)
       
       try {
         await voteDesign(design.id, type, 'remove')
       } catch (err) {
         console.error('Error removing vote:', err)
+      } finally {
+        setIsVoting(false)
       }
       return
     }
 
     // Switch vote if they already voted for the other type
     if (currentVote) {
-      if (currentVote === 'like') setLikes(prev => prev - 1)
-      else setDislikes(prev => prev - 1)
+      if (currentVote === 'like') {
+        setLikes(prev => Math.max(0, prev - 1))
+        design.likes_count = Math.max(0, (design.likes_count || 0) - 1)
+      } else {
+        setDislikes(prev => Math.max(0, prev - 1))
+        design.dislikes_count = Math.max(0, (design.dislikes_count || 0) - 1)
+      }
       
       try {
         await voteDesign(design.id, currentVote as 'like' | 'dislike', 'remove')
@@ -74,17 +95,26 @@ const DesignModal: React.FC<DesignModalProps> = ({ design, designs = [], onClose
     }
 
     // Add new vote
-    if (type === 'like') setLikes(prev => prev + 1)
-    else setDislikes(prev => prev + 1)
+    if (type === 'like') {
+      setLikes(prev => prev + 1)
+      design.likes_count = (design.likes_count || 0) + 1
+    } else {
+      setDislikes(prev => prev + 1)
+      design.dislikes_count = (design.dislikes_count || 0) + 1
+    }
     
+    setUserVote(type)
     localStorage.setItem(`voted_${design.id}`, type)
 
     try {
       await voteDesign(design.id, type, 'add')
     } catch (err) {
       console.error('Error voting:', err)
+    } finally {
+      setIsVoting(false)
     }
   }
+
 
   const modalContent = (
     <AnimatePresence>
@@ -154,7 +184,7 @@ const DesignModal: React.FC<DesignModalProps> = ({ design, designs = [], onClose
               <button 
                 onClick={() => handleVote('like')}
                 className={`flex items-center gap-2 px-4 py-2 rounded-full transition-colors border ${
-                  localStorage.getItem(`voted_${design.id}`) === 'like'
+                  userVote === 'like'
                     ? 'bg-element-black text-white border-element-black'
                     : 'bg-white hover:bg-[#f5f5f5] text-element-black border-border'
                 }`}
@@ -166,7 +196,7 @@ const DesignModal: React.FC<DesignModalProps> = ({ design, designs = [], onClose
               <button 
                 onClick={() => handleVote('dislike')}
                 className={`flex items-center gap-2 px-4 py-2 rounded-full transition-colors border ${
-                  localStorage.getItem(`voted_${design.id}`) === 'dislike'
+                  userVote === 'dislike'
                     ? 'bg-element-black text-white border-element-black'
                     : 'bg-white hover:bg-[#f5f5f5] text-element-black border-border'
                 }`}

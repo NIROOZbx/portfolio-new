@@ -2,7 +2,7 @@ import { supabase } from './supabaseClient'
 
 const COOKIE_NAME = 'portfolio_vid'
 
-function getOrCreateVisitorId(): string {
+export function getOrCreateVisitorId(): string {
     // 1. Try reading cookie
     const match = document.cookie.match(new RegExp('(^| )' + COOKIE_NAME + '=([^;]+)'))
     if (match && match[2]) {
