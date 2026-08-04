@@ -1,16 +1,21 @@
 import { useEffect, useState } from 'react'
 import CountUp from './CountUp'
-import { getAndIncrementTotalViews } from '../services/visitorStats'
 
 export default function VisitorCounter() {
     const [views, setViews] = useState<number | null>(null)
 
     useEffect(() => {
-        getAndIncrementTotalViews().then((count) => {
-            if (count !== null) {
-                setViews(count)
-            }
-        })
+        const requestTimer = window.setTimeout(() => {
+            void import('../services/visitorStats').then(({ getAndIncrementTotalViews }) => {
+                getAndIncrementTotalViews().then((count) => {
+                    if (count !== null) {
+                        setViews(count)
+                    }
+                })
+            })
+        }, 2500)
+
+        return () => window.clearTimeout(requestTimer)
     }, [])
 
     if (views === null) return null

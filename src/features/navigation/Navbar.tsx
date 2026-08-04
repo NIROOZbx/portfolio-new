@@ -6,6 +6,7 @@ import NavItems from './NavItems'
 import NavbarFooter from './NavbarFooter'
 import GithubContributionCard from '../../components/GitHub'
 import { useScrollHide } from '../../hooks/useScrollHide'
+import { useMediaQuery } from '../../hooks/useMediaQuery'
 
 interface NavbarProps {
     currentTab: string
@@ -24,6 +25,7 @@ const navItems = [
 
 const Navbar: React.FC<NavbarProps> = ({ currentTab, setCurrentTab, scrollRef }) => {
     const hidden = useScrollHide(scrollRef)
+    const isDesktop = useMediaQuery('(min-width: 768px)')
     const [tapped, setTapped] = React.useState<string | null>(null)
 
     return (
@@ -112,7 +114,7 @@ const Navbar: React.FC<NavbarProps> = ({ currentTab, setCurrentTab, scrollRef })
                 <NavbarBrand onNavigateHome={() => setCurrentTab('home')} />
                 <NavItems currentTab={currentTab} setCurrentTab={setCurrentTab} />
                 <div className="flex-grow flex items-center justify-center my-6 w-full overflow-hidden">
-                    <GithubContributionCard />
+                    {isDesktop && <GithubContributionCard />}
                 </div>
                 <NavbarFooter />
             </aside>

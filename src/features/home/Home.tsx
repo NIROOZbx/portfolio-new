@@ -4,6 +4,7 @@ import { ArrowLeft } from 'lucide-react'
 import GithubContributionCard from '../../components/GitHub'
 import NavbarFooter from '../navigation/NavbarFooter'
 import VisitorCounter from '../../components/VisitorCounter'
+import { useMediaQuery } from '../../hooks/useMediaQuery'
 
 interface HomeProps {
     onViewProjects: () => void
@@ -11,6 +12,8 @@ interface HomeProps {
 }
 
 const Home: React.FC<HomeProps> = ({ onViewProjects, onGetInTouch }) => {
+    const isDesktop = useMediaQuery('(min-width: 768px)')
+
     return (
         <section className="relative w-full min-h-[70vh] md:min-h-[80vh] flex flex-col items-center justify-center text-center pt-24 pb-12 md:py-20 overflow-hidden box-border">
 
@@ -85,7 +88,7 @@ const Home: React.FC<HomeProps> = ({ onViewProjects, onGetInTouch }) => {
 
                 {/* GitHub Contributions Card on Mobile only (No page scroll needed) */}
                 <div className="block md:hidden w-full max-w-md mx-auto mb-8">
-                    <GithubContributionCard />
+                    {isDesktop === false && <GithubContributionCard />}
                 </div>
 
                 {/* Mobile-only Footer inside Home page wrapper to fit perfectly */}

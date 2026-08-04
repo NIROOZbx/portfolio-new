@@ -11,21 +11,83 @@ let cachedFolders: DesignFolder[] | null = null
 let cachedCounts: Record<string, number> | null = null
 let cachedPreviews: Record<string, string[]> | null = null
 const cachedDesigns: Record<string, DesignItem[]> = {}
+let designsFetchPromise: Promise<void> | null = null
+
+function readDesignsData(): {
+    folders: DesignFolder[]
+    counts: Record<string, number>
+    previews: Record<string, string[]>
+} {
+    if (cachedFolders && cachedCounts && cachedPreviews) {
+        return {
+            folders: cachedFolders,
+            counts: cachedCounts,
+            previews: cachedPreviews,
+        }
+    }
+
+    if (!designsFetchPromise) {
+        designsFetchPromise = (async () => {
+            const [{ data: fData, error: fErr }, { data: dData }] = await Promise.all([
+                supabase.from('design_folders').select('*').order('display_order', { ascending: true }),
+                supabase.from('designs').select('*').order('created_at', { ascending: false })
+            ])
+
+            if (fErr) throw fErr
+            cachedFolders = fData || []
+
+            const newCounts: Record<string, number> = {}
+            const newPreviews: Record<string, string[]> = {}
+            const newCachedDesigns: Record<string, DesignItem[]> = {}
+
+            if (dData) {
+                dData.forEach(d => {
+                    newCounts[d.folder_id] = (newCounts[d.folder_id] || 0) + 1
+
+                    if (!newPreviews[d.folder_id]) {
+                        newPreviews[d.folder_id] = []
+                    }
+                    if (newPreviews[d.folder_id].length < 3 && d.image_url) {
+                        newPreviews[d.folder_id].push(d.image_url)
+                    }
+
+                    if (!newCachedDesigns[d.folder_id]) {
+                        newCachedDesigns[d.folder_id] = []
+                    }
+                    newCachedDesigns[d.folder_id].push(d)
+                })
+
+                Object.keys(newCachedDesigns).forEach(key => {
+                    cachedDesigns[key] = newCachedDesigns[key]
+                })
+            }
+
+            cachedCounts = newCounts
+            cachedPreviews = newPreviews
+        })().catch(err => {
+            console.error('Error fetching folders:', err)
+            cachedFolders = []
+            cachedCounts = {}
+            cachedPreviews = {}
+        })
+    }
+
+    throw designsFetchPromise
+}
 
 interface DesignsProps {
     onHideFooter?: (hide: boolean) => void
 }
 
 const Designs: React.FC<DesignsProps> = ({ onHideFooter }) => {
-    const [folders, setFolders] = useState<DesignFolder[]>([])
-    const [counts, setCounts] = useState<Record<string, number>>({})
-    const [previews, setPreviews] = useState<Record<string, string[]>>({})
+    const initialData = readDesignsData()
+    const [folders] = useState<DesignFolder[]>(initialData.folders)
+    const [counts] = useState<Record<string, number>>(initialData.counts)
+    const [previews] = useState<Record<string, string[]>>(initialData.previews)
     const [activeFolder, setActiveFolder] = useState<DesignFolder | null>(null)
 
     const [designs, setDesigns] = useState<DesignItem[]>([])
     const [activeDesign, setActiveDesign] = useState<DesignItem | null>(null)
-
-    const [isLoading, setIsLoading] = useState(true)
     const [isLoadingDesigns, setIsLoadingDesigns] = useState(false)
 
     const handleNavigate = (direction: 'next' | 'prev') => {
@@ -46,68 +108,6 @@ const Designs: React.FC<DesignsProps> = ({ onHideFooter }) => {
         }
     }, [activeFolder, onHideFooter])
 
-    // Fetch folders and counts on mount
-    useEffect(() => {
-        const fetchFoldersAndCounts = async () => {
-            if (cachedFolders && cachedCounts && cachedPreviews && Object.keys(cachedDesigns).length > 0) {
-                setFolders(cachedFolders)
-                setCounts(cachedCounts)
-                setPreviews(cachedPreviews)
-                setIsLoading(false)
-                return
-            }
-
-            try {
-                const [{ data: fData, error: fErr }, { data: dData }] = await Promise.all([
-                    supabase.from('design_folders').select('*').order('display_order', { ascending: true }),
-                    supabase.from('designs').select('*').order('created_at', { ascending: false })
-                ])
-
-                if (fErr) throw fErr
-                cachedFolders = fData || []
-                setFolders(cachedFolders)
-
-                if (dData) {
-                    const newCounts: Record<string, number> = {}
-                    const newPreviews: Record<string, string[]> = {}
-                    const newCachedDesigns: Record<string, DesignItem[]> = {}
-
-                    dData.forEach(d => {
-                        newCounts[d.folder_id] = (newCounts[d.folder_id] || 0) + 1
-
-                        if (!newPreviews[d.folder_id]) {
-                            newPreviews[d.folder_id] = []
-                        }
-                        if (newPreviews[d.folder_id].length < 3 && d.image_url) {
-                            newPreviews[d.folder_id].push(d.image_url)
-                        }
-
-                        // Preload Full Designs Cache safely
-                        if (!newCachedDesigns[d.folder_id]) {
-                            newCachedDesigns[d.folder_id] = []
-                        }
-                        newCachedDesigns[d.folder_id].push(d)
-                    })
-
-                    // Safely update global cache to prevent duplicates from React StrictMode
-                    Object.keys(newCachedDesigns).forEach(key => {
-                        cachedDesigns[key] = newCachedDesigns[key]
-                    })
-
-                    cachedCounts = newCounts
-                    cachedPreviews = newPreviews
-                    setCounts(cachedCounts)
-                    setPreviews(cachedPreviews)
-                }
-            } catch (err) {
-                console.error('Error fetching folders:', err)
-            } finally {
-                setIsLoading(false)
-            }
-        }
-
-        fetchFoldersAndCounts()
-    }, [])
 
 
 
@@ -156,24 +156,7 @@ const Designs: React.FC<DesignsProps> = ({ onHideFooter }) => {
 
             <div className="-mx-6 px-6 md:mx-0 md:px-0">
                 <AnimatePresence mode="popLayout">
-                    {isLoading ? (
-                        <motion.div
-                            key="loading"
-                            initial={{ opacity: 0 }}
-                            animate={{ opacity: 1 }}
-                            exit={{ opacity: 0 }}
-                            className="w-full min-h-[50vh]"
-                        >
-                            <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-4 md:gap-6 pb-10">
-                                {Array.from({ length: 8 }).map((_, idx) => (
-                                    <div key={idx} className="w-full shrink-0 animate-pulse">
-                                        <div className="w-full aspect-square md:aspect-[4/3] bg-black/5 rounded-2xl mb-3"></div>
-                                        <div className="h-5 bg-black/5 rounded-full w-2/3 mx-auto"></div>
-                                    </div>
-                                ))}
-                            </div>
-                        </motion.div>
-                    ) : !activeFolder ? (
+                    {!activeFolder ? (
                         /* FOLDERS GRID */
                         <motion.div
                             key="folders"

@@ -15,14 +15,18 @@ export default function GithubContributionCard() {
     const { scrollRef, dragHandlers } = useDragScroll()
 
     useEffect(() => {
-        fetchContributions()
-            .then(({ contributions: c, total: t }) => {
-                setContributions(c);
-                setTotal(t);
-            })
-            .catch((err) => {
-                console.warn("Unable to load GitHub contributions:", err);
-            });
+        const requestTimer = window.setTimeout(() => {
+            fetchContributions()
+                .then(({ contributions: c, total: t }) => {
+                    setContributions(c);
+                    setTotal(t);
+                })
+                .catch((err) => {
+                    console.warn("Unable to load GitHub contributions:", err);
+                });
+        }, 2500)
+
+        return () => window.clearTimeout(requestTimer)
     }, []);
 
     // Scroll to the end (most recent contributions) when data is loaded

@@ -1,18 +1,22 @@
-import  { useRef, useEffect, useState } from 'react'
+import { lazy, Suspense, useRef, useEffect, useState } from 'react'
 import { Routes, Route, useLocation, useNavigate } from 'react-router-dom'
 import Navbar from './features/navigation/Navbar'
 import NavbarFooter from './features/navigation/NavbarFooter'
 import heroImg from './assets/hero.webp'
-import { SpeedInsights } from '@vercel/speed-insights/react'
-import { Analytics } from '@vercel/analytics/react'
+import heroImg1280 from './assets/hero-1280.webp'
 
 import Home from './features/home/Home'
 import Services from './features/services/Services'
 import About from './features/about/About'
 import Projects from './features/projects/Projects'
-import Designs from './features/designs/Designs'
 import Contact from './features/contact/Contact'
 import NotFound from './features/NotFound'
+
+import DesignsSkeleton from './features/designs/DesignsSkeleton'
+
+const Analytics = lazy(() => import('@vercel/analytics/react').then(({ Analytics }) => ({ default: Analytics })))
+const SpeedInsights = lazy(() => import('@vercel/speed-insights/react').then(({ SpeedInsights }) => ({ default: SpeedInsights })))
+const Designs = lazy(() => import('./features/designs/Designs'))
 
 function App() {
     const location = useLocation()
@@ -37,17 +41,19 @@ function App() {
 
     return (
         <div className="flex flex-col md:flex-row w-full h-svh relative bg-primary-bg">
-            <SpeedInsights />
-            <Analytics />
+            <DeferredTelemetry />
             {/* Viewport-wide Hero Background (only on Home tab) */}
             {currentTab === 'home' && (
                 <div className="absolute inset-0 w-full h-full pointer-events-none select-none overflow-hidden z-0">
-                    <img
-                        src={heroImg}
-                        className="absolute right-[-3%] bottom-[-23%] -rotate-13  w-[140%] max-w-[700px] sm:max-w-[900px] md:w-[100%] md:max-w-[1200px] lg:w-[90%] lg:max-w-[1400px] xl:max-w-[1544px] h-auto max-w-none opacity-[0.4] md:opacity-[0.71] object-contain"
-                        alt=""
-                        fetchPriority="high"
-                    />
+                    <picture>
+                        <source media="(min-width: 1440px)" srcSet={heroImg} />
+                        <img
+                            src={heroImg1280}
+                            className="absolute right-[-3%] bottom-[-23%] -rotate-13  w-[140%] max-w-[700px] sm:max-w-[900px] md:w-[100%] md:max-w-[1200px] lg:w-[90%] lg:max-w-[1400px] xl:max-w-[1544px] h-auto max-w-none opacity-[0.4] md:opacity-[0.71] object-contain"
+                            alt=""
+                            fetchPriority="high"
+                        />
+                    </picture>
                 </div>
             )}
 
@@ -67,7 +73,14 @@ function App() {
                             <Route path="/services" element={<Services />} />
                             <Route path="/about" element={<About />} />
                             <Route path="/projects" element={<Projects />} />
-                            <Route path="/designs" element={<Designs onHideFooter={setHideFooter} />} />
+                            <Route
+                                path="/designs"
+                                element={
+                                    <Suspense fallback={<DesignsSkeleton showHeader />}>
+                                        <Designs onHideFooter={setHideFooter} />
+                                    </Suspense>
+                                }
+                            />
                             <Route path="/contact" element={<Contact />} />
                             <Route path="*" element={<NotFound />} />
                         </Routes>
@@ -80,6 +93,24 @@ function App() {
 
             </main>
         </div>
+    )
+}
+
+function DeferredTelemetry() {
+    const [enabled, setEnabled] = useState(false)
+
+    useEffect(() => {
+        const timer = window.setTimeout(() => setEnabled(true), 2500)
+        return () => window.clearTimeout(timer)
+    }, [])
+
+    if (!enabled) return null
+
+    return (
+        <Suspense fallback={null}>
+            <SpeedInsights />
+            <Analytics />
+        </Suspense>
     )
 }
 
