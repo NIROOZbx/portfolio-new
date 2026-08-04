@@ -6,7 +6,7 @@ interface DesignsSkeletonProps {
 
 const DesignsSkeleton: React.FC<DesignsSkeletonProps> = ({ showHeader = false }) => {
     return (
-        <div className="w-full min-h-[50vh] text-left animate-fade-in">
+        <div className="w-full min-h-[50vh] text-left">
             {showHeader && (
                 <div className="mb-8 min-h-[56px]">
                     <h1 className="font-heading font-semibold text-4xl md:text-[56px] text-text-heading leading-[1.1] tracking-tight">

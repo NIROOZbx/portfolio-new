@@ -61,9 +61,10 @@ const FolderCard: React.FC<FolderCardProps> = ({ folder, onClick, itemCount = 0,
           overflow-hidden
           z-10
         "
-        initial={{ rotate: -8, x: 0 }}
+        initial={{ opacity: 0, y: 18, rotate: -3 }}
+        animate={{ opacity: 1, y: 0, rotate: -8 }}
         whileHover={{ rotate: -14, x: -10, y: -5 }}
-        transition={{ type: "spring", stiffness: 400, damping: 25 }}
+        transition={{ type: "spring", stiffness: 350, damping: 24, delay: 0.1 }}
       >
         <img
           src={previews[1]}
@@ -87,9 +88,10 @@ const FolderCard: React.FC<FolderCardProps> = ({ folder, onClick, itemCount = 0,
           overflow-hidden
           z-20
         "
-        initial={{ rotate: 8, x: 0 }}
+        initial={{ opacity: 0, y: 18, rotate: 3 }}
+        animate={{ opacity: 1, y: 0, rotate: 8 }}
         whileHover={{ rotate: 14, x: 10, y: -5 }}
-        transition={{ type: "spring", stiffness: 400, damping: 25 }}
+        transition={{ type: "spring", stiffness: 350, damping: 24, delay: 0.12 }}
       >
         <img
           src={previews[2]}
@@ -115,9 +117,10 @@ const FolderCard: React.FC<FolderCardProps> = ({ folder, onClick, itemCount = 0,
           overflow-hidden
           z-30
         "
-        initial={{ rotate: 0 }}
+        initial={{ opacity: 0, y: 22, rotate: 0 }}
+        animate={{ opacity: 1, y: 0, rotate: 0 }}
         whileHover={{ y: -10, scale: 1.03 }}
-        transition={{ type: "spring", stiffness: 400, damping: 25 }}
+        transition={{ type: "spring", stiffness: 350, damping: 24, delay: 0.15 }}
       >
         <img
           src={previews[0]}

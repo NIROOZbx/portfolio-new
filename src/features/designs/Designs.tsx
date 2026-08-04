@@ -112,7 +112,7 @@ const Designs: React.FC<DesignsProps> = ({ onHideFooter }) => {
 
 
     return (
-        <section className="animate-fade-in text-left ">
+        <section className="text-left w-full">
             <div className="mb-8 min-h-[56px]">
                 {activeFolder ? (
                     <motion.div
@@ -161,8 +161,8 @@ const Designs: React.FC<DesignsProps> = ({ onHideFooter }) => {
                         <motion.div
                             key="folders"
                             variants={{
-                                hidden: { opacity: 0 },
-                                show: { opacity: 1, transition: { staggerChildren: 0.1 } }
+                                hidden: { opacity: 1 },
+                                show: { opacity: 1, transition: { staggerChildren: 0.08 } }
                             }}
                             initial="hidden"
                             animate="show"
@@ -174,8 +174,8 @@ const Designs: React.FC<DesignsProps> = ({ onHideFooter }) => {
                                     key={folder.id}
                                     className="w-full shrink-0"
                                     variants={{
-                                        hidden: { opacity: 0, y: 20 },
-                                        show: { opacity: 1, y: 0, transition: { type: 'spring', stiffness: 300, damping: 24 } }
+                                        hidden: { opacity: 0, y: 16, scale: 0.94 },
+                                        show: { opacity: 1, y: 0, scale: 1, transition: { type: 'spring', stiffness: 350, damping: 25 } }
                                     }}
                                 >
                                     <FolderCard
