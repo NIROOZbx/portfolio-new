@@ -69,7 +69,7 @@ function App() {
             >
                 <div key={location.pathname} className={`tab-enter ${currentTab === 'home' ? 'h-full flex justify-center' : ''}`}>
                         <Routes>
-                            <Route path="/" element={<Home onViewProjects={() => navigate('/projects')} onGetInTouch={() => navigate('/contact')} />} />
+                            <Route path="/" element={<Home onViewProjects={() => navigate('/designs')} onGetInTouch={() => navigate('/contact')} />} />
                             <Route path="/services" element={<Services />} />
                             <Route path="/about" element={<About />} />
                             <Route path="/projects" element={<Projects />} />
