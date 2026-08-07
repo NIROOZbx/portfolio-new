@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react'
+import { useSearchParams } from 'react-router-dom'
 import { motion, AnimatePresence } from 'framer-motion'
 import { ArrowLeft } from 'lucide-react'
 import { supabase } from '../../services/supabaseClient'
@@ -80,25 +81,34 @@ interface DesignsProps {
 }
 
 const Designs: React.FC<DesignsProps> = ({ onHideFooter }) => {
+    const [searchParams, setSearchParams] = useSearchParams()
     const initialData = readDesignsData()
     const [folders] = useState<DesignFolder[]>(initialData.folders)
     const [counts] = useState<Record<string, number>>(initialData.counts)
     const [previews] = useState<Record<string, string[]>>(initialData.previews)
-    const [activeFolder, setActiveFolder] = useState<DesignFolder | null>(null)
 
-    const [designs, setDesigns] = useState<DesignItem[]>([])
-    const [activeDesign, setActiveDesign] = useState<DesignItem | null>(null)
-    const [isLoadingDesigns, setIsLoadingDesigns] = useState(false)
+    const folderIdParam = searchParams.get('folder')
+    const designIdParam = searchParams.get('design')
+
+    const activeFolder = folderIdParam ? (folders.find(f => f.id === folderIdParam) || null) : null
+    const designs = activeFolder ? (cachedDesigns[activeFolder.id] || []) : []
+    const activeDesign = designIdParam ? (designs.find(d => d.id === designIdParam) || null) : null
 
     const handleNavigate = (direction: 'next' | 'prev') => {
-        if (!activeDesign || designs.length === 0) return
+        if (!activeDesign || designs.length === 0 || !activeFolder) return
         const currentIndex = designs.findIndex(d => d.id === activeDesign.id)
+        let nextIndex: number
         if (direction === 'next') {
-            const nextIndex = (currentIndex + 1) % designs.length
-            setActiveDesign(designs[nextIndex])
+            nextIndex = (currentIndex + 1) % designs.length
         } else {
-            const prevIndex = (currentIndex - 1 + designs.length) % designs.length
-            setActiveDesign(designs[prevIndex])
+            nextIndex = (currentIndex - 1 + designs.length) % designs.length
+        }
+        const nextDesign = designs[nextIndex]
+        if (nextDesign) {
+            setSearchParams(
+                { folder: activeFolder.id, design: nextDesign.id },
+                { replace: true }
+            )
         }
     }
 
@@ -122,7 +132,7 @@ const Designs: React.FC<DesignsProps> = ({ onHideFooter }) => {
                     >
                         <div className="flex items-center gap-2 text-text-subheading font-sans text-sm">
                             <button
-                                onClick={() => setActiveFolder(null)}
+                                onClick={() => setSearchParams({})}
                                 className="flex items-center gap-1 hover:text-element-black transition-colors group"
                             >
                                 <ArrowLeft size={16} className="group-hover:-translate-x-1 transition-transform" />
@@ -183,9 +193,7 @@ const Designs: React.FC<DesignsProps> = ({ onHideFooter }) => {
                                         itemCount={counts[folder.id] || 0}
                                         previews={previews[folder.id] || []}
                                         onClick={() => {
-                                            setDesigns(cachedDesigns[folder.id] || [])
-                                            setIsLoadingDesigns(false)
-                                            setActiveFolder(folder)
+                                            setSearchParams({ folder: folder.id })
                                         }}
                                     />
                                 </motion.div>
@@ -210,18 +218,7 @@ const Designs: React.FC<DesignsProps> = ({ onHideFooter }) => {
                             exit={{ opacity: 0 }}
                             transition={{ duration: 0.3 }}
                         >
-                            {isLoadingDesigns ? (
-                                <div className="w-full min-h-[50vh]">
-                                    <div className="grid grid-cols-2 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4 md:gap-6 pb-10">
-                                        {Array.from({ length: 8 }).map((_, idx) => (
-                                            <div key={idx} className="rounded-2xl bg-white border border-black/5 p-3 flex flex-col animate-pulse">
-                                                <div className="rounded-xl bg-black/5 aspect-[4/3] shrink-0 w-full mb-4"></div>
-                                                <div className="h-5 bg-black/5 rounded w-3/4 mb-1"></div>
-                                            </div>
-                                        ))}
-                                    </div>
-                                </div>
-                            ) : designs.length > 0 ? (
+                            {designs.length > 0 ? (
                                 <div className="grid grid-cols-2 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4 md:gap-6 pb-10">
                                     {designs.map((design) => (
                                         <motion.div
@@ -230,7 +227,11 @@ const Designs: React.FC<DesignsProps> = ({ onHideFooter }) => {
                                             initial={{ opacity: 0 }}
                                             animate={{ opacity: 1 }}
                                             transition={{ duration: 0.3 }}
-                                            onClick={() => setActiveDesign(design)}
+                                            onClick={() => {
+                                                if (activeFolder) {
+                                                    setSearchParams({ folder: activeFolder.id, design: design.id })
+                                                }
+                                            }}
                                         >
                                             <div className="relative rounded-xl overflow-hidden bg-[#f5f5f5] aspect-[4/3] shrink-0 flex items-center justify-center p-2">
                                                 <img
@@ -280,7 +281,13 @@ const Designs: React.FC<DesignsProps> = ({ onHideFooter }) => {
             <DesignModal
                 design={activeDesign}
                 designs={designs}
-                onClose={() => setActiveDesign(null)}
+                onClose={() => {
+                    if (activeFolder) {
+                        setSearchParams({ folder: activeFolder.id })
+                    } else {
+                        setSearchParams({})
+                    }
+                }}
                 onNavigate={handleNavigate}
             />
         </section>

@@ -7,11 +7,11 @@ import VisitorCounter from '../../components/VisitorCounter'
 import { useMediaQuery } from '../../hooks/useMediaQuery'
 
 interface HomeProps {
-    onViewProjects: () => void
+    onViewDesigns: () => void
     onGetInTouch: () => void
 }
 
-const Home: React.FC<HomeProps> = ({ onViewProjects, onGetInTouch }) => {
+const Home: React.FC<HomeProps> = ({ onViewDesigns, onGetInTouch }) => {
     const isDesktop = useMediaQuery('(min-width: 768px)')
 
     return (
@@ -74,7 +74,7 @@ const Home: React.FC<HomeProps> = ({ onViewProjects, onGetInTouch }) => {
 
                     {/* View Projects Link Button */}
                     <button
-                        onClick={onViewProjects}
+                        onClick={onViewDesigns}
                         className="h-[44px] px-6 bg-black/[0.03] backdrop-blur-lg border border-black/[0.08] hover:bg-black/[0.06] hover:border-black/[0.15] hover:shadow-[0_8px_24px_-8px_rgba(0,0,0,0.1)] text-element-black rounded-[100px] text-[14px] font-semibold transition-all duration-300 active:scale-[0.98] cursor-pointer flex items-center justify-center"
                     >
                         View Designs
