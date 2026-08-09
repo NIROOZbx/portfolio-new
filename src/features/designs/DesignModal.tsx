@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react'
+import React, { useState, useEffect, useRef } from 'react'
 import { createPortal } from 'react-dom'
 import { motion, AnimatePresence } from 'framer-motion'
 import { X, ThumbsUp, ThumbsDown, ChevronLeft, ChevronRight } from 'lucide-react'
@@ -43,13 +43,17 @@ const DesignModal: React.FC<DesignModalProps> = ({ design, designs = [], onClose
     }
   }, [design, onNavigate, onClose])
 
-  if (!design) return null
+  const previousDesignRef = useRef<DesignItem | null>(null)
+  if (design) {
+    previousDesignRef.current = design
+  }
+  const displayDesign = design || previousDesignRef.current
 
   const totalVotes = likes + dislikes
   const approvalRating = totalVotes > 0 ? Math.round((likes / totalVotes) * 100) : 0
 
   const handleVote = async (type: 'like' | 'dislike') => {
-    if (isVoting) return
+    if (isVoting || !displayDesign) return
     setIsVoting(true)
 
     const currentVote = userVote
@@ -58,17 +62,17 @@ const DesignModal: React.FC<DesignModalProps> = ({ design, designs = [], onClose
     if (currentVote === type) {
       if (type === 'like') {
         setLikes(prev => Math.max(0, prev - 1))
-        design.likes_count = Math.max(0, (design.likes_count || 0) - 1)
+        displayDesign.likes_count = Math.max(0, (displayDesign.likes_count || 0) - 1)
       } else {
         setDislikes(prev => Math.max(0, prev - 1))
-        design.dislikes_count = Math.max(0, (design.dislikes_count || 0) - 1)
+        displayDesign.dislikes_count = Math.max(0, (displayDesign.dislikes_count || 0) - 1)
       }
       
       setUserVote(null)
-      localStorage.removeItem(`voted_${design.id}`)
+      localStorage.removeItem(`voted_${displayDesign.id}`)
       
       try {
-        await voteDesign(design.id, type, 'remove')
+        await voteDesign(displayDesign.id, type, 'remove')
       } catch (err) {
         console.error('Error removing vote:', err)
       } finally {
@@ -81,14 +85,14 @@ const DesignModal: React.FC<DesignModalProps> = ({ design, designs = [], onClose
     if (currentVote) {
       if (currentVote === 'like') {
         setLikes(prev => Math.max(0, prev - 1))
-        design.likes_count = Math.max(0, (design.likes_count || 0) - 1)
+        displayDesign.likes_count = Math.max(0, (displayDesign.likes_count || 0) - 1)
       } else {
         setDislikes(prev => Math.max(0, prev - 1))
-        design.dislikes_count = Math.max(0, (design.dislikes_count || 0) - 1)
+        displayDesign.dislikes_count = Math.max(0, (displayDesign.dislikes_count || 0) - 1)
       }
       
       try {
-        await voteDesign(design.id, currentVote as 'like' | 'dislike', 'remove')
+        await voteDesign(displayDesign.id, currentVote as 'like' | 'dislike', 'remove')
       } catch (err) {
         console.error('Error removing old vote:', err)
       }
@@ -97,17 +101,17 @@ const DesignModal: React.FC<DesignModalProps> = ({ design, designs = [], onClose
     // Add new vote
     if (type === 'like') {
       setLikes(prev => prev + 1)
-      design.likes_count = (design.likes_count || 0) + 1
+      displayDesign.likes_count = (displayDesign.likes_count || 0) + 1
     } else {
       setDislikes(prev => prev + 1)
-      design.dislikes_count = (design.dislikes_count || 0) + 1
+      displayDesign.dislikes_count = (displayDesign.dislikes_count || 0) + 1
     }
     
     setUserVote(type)
-    localStorage.setItem(`voted_${design.id}`, type)
+    localStorage.setItem(`voted_${displayDesign.id}`, type)
 
     try {
-      await voteDesign(design.id, type, 'add')
+      await voteDesign(displayDesign.id, type, 'add')
     } catch (err) {
       console.error('Error voting:', err)
     } finally {
@@ -118,7 +122,9 @@ const DesignModal: React.FC<DesignModalProps> = ({ design, designs = [], onClose
 
   const modalContent = (
     <AnimatePresence>
-      <motion.div 
+      {design && displayDesign && (
+        <motion.div 
+          key="design-modal-backdrop"
         className="fixed inset-0 z-[100] flex items-center justify-center bg-black/60 backdrop-blur-sm p-8 md:p-16"
         initial={{ opacity: 0 }}
         animate={{ opacity: 1 }}
@@ -138,7 +144,7 @@ const DesignModal: React.FC<DesignModalProps> = ({ design, designs = [], onClose
           initial={{ y: 40, opacity: 0, scale: 0.95 }}
           animate={{ y: 0, opacity: 1, scale: 1 }}
           exit={{ y: 20, opacity: 0, scale: 0.95 }}
-          transition={{ type: 'spring', damping: 25, stiffness: 300 }}
+          transition={{ type: 'inertia', damping: 25, stiffness: 300 }}
           onClick={e => e.stopPropagation()}
         >
           {/* Navigation Arrows (Outside Card) */}
@@ -160,10 +166,10 @@ const DesignModal: React.FC<DesignModalProps> = ({ design, designs = [], onClose
           )}
 
           {/* Image Container */}
-          <div className="relative rounded-xl bg-[#f5f5f5] overflow-hidden flex justify-center items-center [transform:translateZ(0)] shrink min-h-0">
+          <div className="relative rounded-xl bg-[#f5f5f5] overflow-hidden flex justify-center items-center [transform:translateZ(0)] shrink min-h-0 min-w-[200px] min-h-[200px]">
              <img 
-               src={design.image_url || 'https://placehold.co/1200x800/1e1e1e/565353?text=No+Image'} 
-               alt={design.title}
+               src={displayDesign.image_url || 'https://placehold.co/1200x800/1e1e1e/565353?text=No+Image'} 
+               alt={displayDesign.title}
                onError={(e) => { e.currentTarget.src = 'https://placehold.co/1200x800/1e1e1e/565353?text=No+Image' }}
                className="w-auto h-auto max-w-full max-h-[calc(90vh-120px)] object-contain rounded-xl block"
              />
@@ -208,6 +214,7 @@ const DesignModal: React.FC<DesignModalProps> = ({ design, designs = [], onClose
           </div>
         </motion.div>
       </motion.div>
+      )}
     </AnimatePresence>
   )
   return createPortal(modalContent, document.body)

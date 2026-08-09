@@ -176,7 +176,7 @@ const Designs: React.FC<DesignsProps> = ({ onHideFooter }) => {
                             }}
                             initial="hidden"
                             animate="show"
-                            exit={{ opacity: 0, y: -10, transition: { duration: 0.15 } }}
+                            exit={{ opacity: 0, scale: 1.05, filter: 'blur(4px)', transition: { duration: 0.25, ease: 'easeIn' } }}
                             className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-4 md:gap-6 pb-10"
                         >
                             {folders.map((folder) => (
@@ -185,7 +185,7 @@ const Designs: React.FC<DesignsProps> = ({ onHideFooter }) => {
                                     className="w-full shrink-0"
                                     variants={{
                                         hidden: { opacity: 0, y: 16, scale: 0.94 },
-                                        show: { opacity: 1, y: 0, scale: 1, transition: { type: 'spring', stiffness: 350, damping: 25 } }
+                                        show: { opacity: 1, y: 0, scale: 1, transition: { type: 'spring', stiffness: 150, damping: 25 } }
                                     }}
                                 >
                                     <FolderCard
@@ -213,10 +213,10 @@ const Designs: React.FC<DesignsProps> = ({ onHideFooter }) => {
                         /* DESIGNS GRID */
                         <motion.div
                             key="designs"
-                            initial={{ opacity: 0 }}
-                            animate={{ opacity: 1 }}
-                            exit={{ opacity: 0 }}
-                            transition={{ duration: 0.3 }}
+                            initial={{ opacity: 0, scale: 0.95, y: 15 }}
+                            animate={{ opacity: 1, scale: 1, y: 0 }}
+                            exit={{ opacity: 0, transition: { duration: 0.3 } }}
+                            transition={{ duration: 0.4, type: 'spring', bounce: 0, damping: 25, stiffness: 150 }}
                         >
                             {designs.length > 0 ? (
                                 <div className="grid grid-cols-2 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4 md:gap-6 pb-10">
