@@ -177,7 +177,7 @@ const Designs: React.FC<DesignsProps> = ({ onHideFooter }) => {
                             }}
                             initial="hidden"
                             animate="show"
-                            exit={{ opacity: 0, transition: { duration: 0.15, ease: 'easeIn' } }}
+                            exit={{ opacity: 0, scale: 1.04, transition: { duration: 0.2, ease: 'easeIn' } }}
                             className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-4 md:gap-6 pb-10"
                         >
                             {/* ANIMATION START: The stagger for folders loading. */}
@@ -217,12 +217,12 @@ const Designs: React.FC<DesignsProps> = ({ onHideFooter }) => {
                         <motion.div
                             key="designs"
                             variants={{
-                                hidden: { opacity: 0, y: 15 },
-                                show: { opacity: 1, y: 0, transition: { duration: 0.25, ease: 'easeOut', staggerChildren: 0.05, delayChildren: 0.05 } }
+                                hidden: { opacity: 0, scale: 0.96, y: 15 },
+                                show: { opacity: 1, scale: 1, y: 0, transition: { duration: 0.25, ease: 'easeOut', staggerChildren: 0.05, delayChildren: 0.05 } }
                             }}
                             initial="hidden"
                             animate="show"
-                            exit={{ opacity: 0, transition: { duration: 0.15 } }}
+                            exit={{ opacity: 0, scale: 0.96, transition: { duration: 0.2, ease: 'easeIn' } }}
                         >
                             {/* ANIMATION START: The designs grid popping up without expensive scaling. */}
                             {designs.length > 0 ? (
