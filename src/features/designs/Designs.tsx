@@ -225,7 +225,7 @@ const Designs: React.FC<DesignsProps> = ({ onHideFooter }) => {
                                 hidden: { opacity: 0, scale: 0.95, y: 15 },
                                 show: { 
                                     opacity: 1, scale: 1, y: 0, 
-                                    transition: { type: 'spring', stiffness: 150, damping: 25, staggerChildren: 0.04 } 
+                                    transition: { type: 'spring', stiffness: 150, damping: 25, staggerChildren: 0.02 } 
                                 }
                             }}
                             initial="hidden"
@@ -236,10 +236,11 @@ const Designs: React.FC<DesignsProps> = ({ onHideFooter }) => {
                         >
                             {/* ANIMATION START: The designs grid popping up without expensive scaling. */}
                             {designs.length > 0 ? (
-                                <div className="grid grid-cols-2 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4 md:gap-6 pb-10">
+                                <div className="grid grid-cols-2 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4 md:gap-6 pb-10 min-h-[50vh]">
                                     {designs.map((design) => (
                                         <motion.div
                                             key={design.id}
+                                            style={{ willChange: isAnimating ? 'transform, opacity' : 'auto' }}
                                             className="cursor-pointer group rounded-2xl bg-white hover:shadow-[0_8px_30px_rgba(0,0,0,0.08)] border border-black/5 transition-shadow duration-300 p-3 flex flex-col"
                                             variants={{
                                                 hidden: { opacity: 0, y: 10 },
