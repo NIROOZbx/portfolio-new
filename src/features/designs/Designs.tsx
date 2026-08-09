@@ -166,7 +166,7 @@ const Designs: React.FC<DesignsProps> = ({ onHideFooter }) => {
             </div>
 
             <div className="-mx-6 px-6 md:mx-0 md:px-0">
-                <AnimatePresence mode="popLayout">
+                <AnimatePresence mode="wait">
                     {!activeFolder ? (
                         /* FOLDERS GRID */
                         <motion.div
@@ -177,7 +177,7 @@ const Designs: React.FC<DesignsProps> = ({ onHideFooter }) => {
                             }}
                             initial="hidden"
                             animate="show"
-                            exit={{ opacity: 0, scale: 1.05, transition: { duration: 0.25, ease: 'easeIn' } }}
+                            exit={{ opacity: 0, transition: { duration: 0.15, ease: 'easeIn' } }}
                             className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-4 md:gap-6 pb-10"
                         >
                             {/* ANIMATION START: Controls the staggered load of all folders. When exiting (clicking into a folder), this causes the entire grid to scale up and fade out to create a "pan-in" camera effect. */}
