@@ -86,6 +86,7 @@ const Designs: React.FC<DesignsProps> = ({ onHideFooter }) => {
     const [folders] = useState<DesignFolder[]>(initialData.folders)
     const [counts] = useState<Record<string, number>>(initialData.counts)
     const [previews] = useState<Record<string, string[]>>(initialData.previews)
+    const [isAnimating, setIsAnimating] = useState(true)
 
     const folderIdParam = searchParams.get('folder')
     const designIdParam = searchParams.get('design')
@@ -179,12 +180,15 @@ const Designs: React.FC<DesignsProps> = ({ onHideFooter }) => {
                             animate="show"
                             exit={{ opacity: 0, scale: 1.04, transition: { duration: 0.2, ease: 'easeIn' } }}
                             className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-4 md:gap-6 pb-10"
+                            onAnimationStart={() => setIsAnimating(true)}
+                            onAnimationComplete={() => setIsAnimating(false)}
                         >
                             {/* ANIMATION START: The stagger for folders loading. */}
                             {folders.map((folder) => (
                                 <motion.div
                                     key={folder.id}
                                     className="w-full shrink-0"
+                                    style={{ willChange: isAnimating ? 'transform, opacity' : 'auto' }}
                                     variants={{
                                         hidden: { opacity: 0, y: 16 },
                                         show: { opacity: 1, y: 0, transition: { duration: 0.3, ease: 'easeOut' } }
@@ -216,13 +220,19 @@ const Designs: React.FC<DesignsProps> = ({ onHideFooter }) => {
                         /* DESIGNS GRID */
                         <motion.div
                             key="designs"
+                            style={{ willChange: isAnimating ? 'transform, opacity' : 'auto' }}
                             variants={{
-                                hidden: { opacity: 0, scale: 0.96, y: 15 },
-                                show: { opacity: 1, scale: 1, y: 0, transition: { duration: 0.25, ease: 'easeOut', staggerChildren: 0.05, delayChildren: 0.05 } }
+                                hidden: { opacity: 0, scale: 0.95, y: 15 },
+                                show: { 
+                                    opacity: 1, scale: 1, y: 0, 
+                                    transition: { type: 'spring', stiffness: 150, damping: 25, staggerChildren: 0.04 } 
+                                }
                             }}
                             initial="hidden"
                             animate="show"
-                            exit={{ opacity: 0, scale: 0.96, transition: { duration: 0.2, ease: 'easeIn' } }}
+                            exit={{ opacity: 0, transition: { duration: 0.3 } }}
+                            onAnimationStart={() => setIsAnimating(true)}
+                            onAnimationComplete={() => setIsAnimating(false)}
                         >
                             {/* ANIMATION START: The designs grid popping up without expensive scaling. */}
                             {designs.length > 0 ? (
@@ -230,10 +240,10 @@ const Designs: React.FC<DesignsProps> = ({ onHideFooter }) => {
                                     {designs.map((design) => (
                                         <motion.div
                                             key={design.id}
-                                            className="cursor-pointer group rounded-2xl bg-white shadow-[0_2px_10px_rgba(0,0,0,0.03)] hover:shadow-[0_8px_30px_rgba(0,0,0,0.08)] border border-black/5 transition-shadow duration-300 p-3 flex flex-col"
+                                            className="cursor-pointer group rounded-2xl bg-white hover:shadow-[0_8px_30px_rgba(0,0,0,0.08)] border border-black/5 transition-shadow duration-300 p-3 flex flex-col"
                                             variants={{
                                                 hidden: { opacity: 0, y: 10 },
-                                                show: { opacity: 1, y: 0, transition: { duration: 0.25, ease: 'easeOut' } }
+                                                show: { opacity: 1, y: 0, transition: { duration: 0.3 } }
                                             }}
                                             onClick={() => {
                                                 if (activeFolder) {
@@ -241,25 +251,24 @@ const Designs: React.FC<DesignsProps> = ({ onHideFooter }) => {
                                                 }
                                             }}
                                         >
-                                            {/* ANIMATION START: The simple fade-in for each individual design card image when the grid renders. */}
                                             <div className="relative rounded-xl overflow-hidden bg-[#f5f5f5] aspect-[4/3] shrink-0 flex items-center justify-center p-2">
                                                 <img
                                                     src={design.image_url || 'https://placehold.co/600x400/1e1e1e/565353?text=No+Image'}
                                                     alt={design.title}
                                                     onError={(e) => { e.currentTarget.src = 'https://placehold.co/600x400/1e1e1e/565353?text=No+Image' }}
-                                                    className="w-full h-full object-contain transition-all duration-300 lg:group-hover:scale-105 lg:group-hover:blur-[0.5px]"
+                                                    className="w-full h-full object-contain transition-transform duration-300 group-hover:scale-105"
                                                     loading="lazy"
+                                                    decoding="async"
                                                 />
-                                                <div className="absolute inset-0 bg-black/40 opacity-0 lg:group-hover:opacity-100 transition-opacity duration-300 pointer-events-none flex items-center justify-center">
-                                                    <p className="flex items-center gap-1 text-white text-[13px] font-sans font-medium tracking-wide opacity-0 translate-y-2 lg:group-hover:opacity-100 lg:group-hover:translate-y-0 transition-all duration-300 delay-75">
-                                                       <Eye size={12}/> Click to view design
-                                                    </p>
-                                                </div>
+                                                <div className="absolute inset-0 bg-black/5 opacity-0 group-hover:opacity-100 transition-opacity duration-300 pointer-events-none" />
                                             </div>
                                             <div className="mt-4 px-1 flex flex-col pb-1">
                                                 <h3 className=" text-element-black  text-[12px]">
                                                     {design.title}
                                                 </h3>
+                                                <p className="hidden lg:block text-[11px] font-sans text-text-subheading opacity-0 translate-y-1 lg:group-hover:opacity-100 lg:group-hover:translate-y-0 transition-all duration-300 mt-1">
+                                                    Click to view design
+                                                </p>
                                             </div>
                                         </motion.div>
                                     ))}
