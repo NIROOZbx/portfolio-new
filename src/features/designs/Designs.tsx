@@ -180,14 +180,14 @@ const Designs: React.FC<DesignsProps> = ({ onHideFooter }) => {
                             exit={{ opacity: 0, transition: { duration: 0.15, ease: 'easeIn' } }}
                             className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-4 md:gap-6 pb-10"
                         >
-                            {/* ANIMATION START: Controls the staggered load of all folders. When exiting (clicking into a folder), this causes the entire grid to scale up and fade out to create a "pan-in" camera effect. */}
+                            {/* ANIMATION START: The stagger for folders loading. */}
                             {folders.map((folder) => (
                                 <motion.div
                                     key={folder.id}
                                     className="w-full shrink-0"
                                     variants={{
-                                        hidden: { opacity: 0, y: 16, scale: 0.94 },
-                                        show: { opacity: 1, y: 0, scale: 1, transition: { type: 'spring', stiffness: 150, damping: 25 } }
+                                        hidden: { opacity: 0, y: 16 },
+                                        show: { opacity: 1, y: 0, transition: { duration: 0.3, ease: 'easeOut' } }
                                     }}
                                 >
                                     {/* ANIMATION START: The spring animation for each individual folder card rising up from the bottom when loaded. */}
@@ -217,14 +217,14 @@ const Designs: React.FC<DesignsProps> = ({ onHideFooter }) => {
                         <motion.div
                             key="designs"
                             variants={{
-                                hidden: { opacity: 0, scale: 0.95, y: 15 },
-                                show: { opacity: 1, scale: 1, y: 0, transition: { type: 'spring', stiffness: 150, damping: 25, staggerChildren: 0.05, delayChildren: 0.1 } }
+                                hidden: { opacity: 0, y: 15 },
+                                show: { opacity: 1, y: 0, transition: { duration: 0.25, ease: 'easeOut', staggerChildren: 0.05, delayChildren: 0.05 } }
                             }}
                             initial="hidden"
                             animate="show"
-                            exit={{ opacity: 0, transition: { duration: 0.3 } }}
+                            exit={{ opacity: 0, transition: { duration: 0.15 } }}
                         >
-                            {/* ANIMATION START: The designs grid popping up and scaling to full size when you enter a folder. On exit (clicking back), it disappears instantly to avoid flashing. */}
+                            {/* ANIMATION START: The designs grid popping up without expensive scaling. */}
                             {designs.length > 0 ? (
                                 <div className="grid grid-cols-2 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4 md:gap-6 pb-10">
                                     {designs.map((design) => (
@@ -233,7 +233,7 @@ const Designs: React.FC<DesignsProps> = ({ onHideFooter }) => {
                                             className="cursor-pointer group rounded-2xl bg-white shadow-[0_2px_10px_rgba(0,0,0,0.03)] hover:shadow-[0_8px_30px_rgba(0,0,0,0.08)] border border-black/5 transition-shadow duration-300 p-3 flex flex-col"
                                             variants={{
                                                 hidden: { opacity: 0, y: 10 },
-                                                show: { opacity: 1, y: 0, transition: { duration: 0.3 } }
+                                                show: { opacity: 1, y: 0, transition: { duration: 0.25, ease: 'easeOut' } }
                                             }}
                                             onClick={() => {
                                                 if (activeFolder) {
