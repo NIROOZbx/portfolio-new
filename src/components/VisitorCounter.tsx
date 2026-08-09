@@ -18,7 +18,19 @@ export default function VisitorCounter() {
         return () => window.clearTimeout(requestTimer)
     }, [])
 
-    if (views === null) return null
+    if (views === null) {
+        return (
+            <div className="inline-flex items-center gap-2.5 opacity-60">
+                <span className="relative flex h-2 w-2">
+                    <span className="relative inline-flex rounded-full h-2 w-2 bg-gray-300 dark:bg-gray-700 animate-pulse"></span>
+                </span>
+                <span className="inline-flex items-center gap-1.5 font-sans text-[10px] font-medium text-text-subheading/90">
+                    <span className="inline-block h-2.5 w-6 bg-gray-200 dark:bg-gray-800 rounded-sm animate-pulse" />
+                    <span>visitors</span>
+                </span>
+            </div>
+        )
+    }
 
     return (
         <div className="inline-flex items-center gap-2.5">

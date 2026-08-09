@@ -4,16 +4,19 @@ export const serviceList: ServiceItem[] = [
   {
     title: 'UI/UX Design',
     badge: "Your product's first impression",
-    description: 'Most users decide in seconds whether to stay or leave. I design interfaces that feel intuitive, look polished, and guide people exactly where you want them to go — no confusion, no friction.'
+    description:
+      'I turn complex ideas into clear, intuitive interfaces — combining user flows, visual hierarchy, and thoughtful interactions to create products people understand quickly and enjoy using.'
   },
   {
     title: 'Web Development',
-    badge: 'Your idea, live on the internet',
-    description: "A great design means nothing if it doesn't work. I build fast, clean websites and web apps that look exactly like the design — and hold up under real users, real devices, and real traffic."
+    badge: 'Turn your idea into something people can use',
+    description:
+      'I turn designs into fast, reliable websites and web apps — built with clean architecture, responsive interfaces, and the performance needed to handle real users and real traffic.'
   },
   {
     title: 'Automation & AI',
-    badge: 'Stop doing the same thing twice',
-    description: "Copy-pasting data, chasing invoices, scheduling posts, sending the same reply for the hundredth time. I'll handle all of it — so you spend less time managing tools and more time doing what you're actually good at."
+    badge: 'Let technology handle the repetitive work',
+    description:
+      'I automate repetitive workflows and connect the tools you already use — from data processing and notifications to AI-powered workflows — so your team can spend less time on manual work.'
   }
 ]

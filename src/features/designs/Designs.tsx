@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react'
 import { useSearchParams } from 'react-router-dom'
 import { motion, AnimatePresence } from 'framer-motion'
-import { ArrowLeft } from 'lucide-react'
+import { ArrowLeft, Eye } from 'lucide-react'
 import { supabase } from '../../services/supabaseClient'
 import FolderCard from '../../components/FolderCard'
 import DesignModal from './DesignModal'
@@ -130,6 +130,7 @@ const Designs: React.FC<DesignsProps> = ({ onHideFooter }) => {
                         animate={{ opacity: 1, y: 0 }}
                         className="flex flex-col gap-2"
                     >
+                        {/* ANIMATION START: Header title and back button fading in and dropping down slightly when opening a folder */}
                         <div className="flex items-center gap-2 text-text-subheading font-sans text-sm">
                             <button
                                 onClick={() => setSearchParams({})}
@@ -176,9 +177,10 @@ const Designs: React.FC<DesignsProps> = ({ onHideFooter }) => {
                             }}
                             initial="hidden"
                             animate="show"
-                            exit={{ opacity: 0, scale: 1.05, filter: 'blur(4px)', transition: { duration: 0.25, ease: 'easeIn' } }}
+                            exit={{ opacity: 0, scale: 1.05, transition: { duration: 0.25, ease: 'easeIn' } }}
                             className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-4 md:gap-6 pb-10"
                         >
+                            {/* ANIMATION START: Controls the staggered load of all folders. When exiting (clicking into a folder), this causes the entire grid to scale up and fade out to create a "pan-in" camera effect. */}
                             {folders.map((folder) => (
                                 <motion.div
                                     key={folder.id}
@@ -188,6 +190,7 @@ const Designs: React.FC<DesignsProps> = ({ onHideFooter }) => {
                                         show: { opacity: 1, y: 0, scale: 1, transition: { type: 'spring', stiffness: 150, damping: 25 } }
                                     }}
                                 >
+                                    {/* ANIMATION START: The spring animation for each individual folder card rising up from the bottom when loaded. */}
                                     <FolderCard
                                         folder={folder}
                                         itemCount={counts[folder.id] || 0}
@@ -213,43 +216,50 @@ const Designs: React.FC<DesignsProps> = ({ onHideFooter }) => {
                         /* DESIGNS GRID */
                         <motion.div
                             key="designs"
-                            initial={{ opacity: 0, scale: 0.95, y: 15 }}
-                            animate={{ opacity: 1, scale: 1, y: 0 }}
+                            variants={{
+                                hidden: { opacity: 0, scale: 0.95, y: 15 },
+                                show: { opacity: 1, scale: 1, y: 0, transition: { type: 'spring', stiffness: 150, damping: 25, staggerChildren: 0.05, delayChildren: 0.1 } }
+                            }}
+                            initial="hidden"
+                            animate="show"
                             exit={{ opacity: 0, transition: { duration: 0.3 } }}
-                            transition={{ duration: 0.4, type: 'spring', bounce: 0, damping: 25, stiffness: 150 }}
                         >
+                            {/* ANIMATION START: The designs grid popping up and scaling to full size when you enter a folder. On exit (clicking back), it disappears instantly to avoid flashing. */}
                             {designs.length > 0 ? (
                                 <div className="grid grid-cols-2 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4 md:gap-6 pb-10">
                                     {designs.map((design) => (
                                         <motion.div
                                             key={design.id}
-                                            className="cursor-pointer group rounded-2xl bg-white shadow-[0_2px_10px_rgba(0,0,0,0.03)] hover:shadow-[0_8px_30px_rgba(0,0,0,0.08)] border border-black/5 transition-all p-3 flex flex-col"
-                                            initial={{ opacity: 0 }}
-                                            animate={{ opacity: 1 }}
-                                            transition={{ duration: 0.3 }}
+                                            className="cursor-pointer group rounded-2xl bg-white shadow-[0_2px_10px_rgba(0,0,0,0.03)] hover:shadow-[0_8px_30px_rgba(0,0,0,0.08)] border border-black/5 transition-shadow duration-300 p-3 flex flex-col"
+                                            variants={{
+                                                hidden: { opacity: 0, y: 10 },
+                                                show: { opacity: 1, y: 0, transition: { duration: 0.3 } }
+                                            }}
                                             onClick={() => {
                                                 if (activeFolder) {
                                                     setSearchParams({ folder: activeFolder.id, design: design.id })
                                                 }
                                             }}
                                         >
+                                            {/* ANIMATION START: The simple fade-in for each individual design card image when the grid renders. */}
                                             <div className="relative rounded-xl overflow-hidden bg-[#f5f5f5] aspect-[4/3] shrink-0 flex items-center justify-center p-2">
                                                 <img
                                                     src={design.image_url || 'https://placehold.co/600x400/1e1e1e/565353?text=No+Image'}
                                                     alt={design.title}
                                                     onError={(e) => { e.currentTarget.src = 'https://placehold.co/600x400/1e1e1e/565353?text=No+Image' }}
-                                                    className="w-full h-full object-contain transition-transform duration-700 group-hover:scale-105"
+                                                    className="w-full h-full object-contain transition-all duration-300 lg:group-hover:scale-105 lg:group-hover:blur-[0.5px]"
                                                     loading="lazy"
                                                 />
-                                                <div className="absolute inset-0 bg-black/5 opacity-0 group-hover:opacity-100 transition-opacity duration-300 pointer-events-none" />
+                                                <div className="absolute inset-0 bg-black/40 opacity-0 lg:group-hover:opacity-100 transition-opacity duration-300 pointer-events-none flex items-center justify-center">
+                                                    <p className="flex items-center gap-1 text-white text-[13px] font-sans font-medium tracking-wide opacity-0 translate-y-2 lg:group-hover:opacity-100 lg:group-hover:translate-y-0 transition-all duration-300 delay-75">
+                                                       <Eye size={12}/> Click to view design
+                                                    </p>
+                                                </div>
                                             </div>
                                             <div className="mt-4 px-1 flex flex-col pb-1">
                                                 <h3 className=" text-element-black  text-[12px]">
                                                     {design.title}
                                                 </h3>
-                                                <p className="text-[11px] font-sans text-text-subheading max-h-0 opacity-0 group-hover:max-h-6 group-hover:opacity-100 group-hover:mt-1 transition-all duration-300 overflow-hidden">
-                                                    Click to view design
-                                                </p>
                                             </div>
                                         </motion.div>
                                     ))}
