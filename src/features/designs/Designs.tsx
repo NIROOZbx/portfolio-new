@@ -257,19 +257,20 @@ const Designs: React.FC<DesignsProps> = ({ onHideFooter }) => {
                                                     src={design.image_url || 'https://placehold.co/600x400/1e1e1e/565353?text=No+Image'}
                                                     alt={design.title}
                                                     onError={(e) => { e.currentTarget.src = 'https://placehold.co/600x400/1e1e1e/565353?text=No+Image' }}
-                                                    className="w-full h-full object-contain transition-transform duration-300 group-hover:scale-105"
+                                                    className="w-full h-full object-contain transition-all duration-300 lg:group-hover:scale-105 lg:group-hover:blur-[0.5px]"
                                                     loading="lazy"
                                                     decoding="async"
                                                 />
-                                                <div className="absolute inset-0 bg-black/5 opacity-0 group-hover:opacity-100 transition-opacity duration-300 pointer-events-none" />
+                                                <div className="absolute inset-0 bg-black/40 opacity-0 lg:group-hover:opacity-100 transition-opacity duration-300 pointer-events-none flex items-center justify-center">
+                                                    <p className="flex items-center gap-1 text-white text-[13px] font-sans font-medium tracking-wide opacity-0 translate-y-2 lg:group-hover:opacity-100 lg:group-hover:translate-y-0 transition-all duration-300 delay-75">
+                                                       <Eye size={12}/> Click to view design
+                                                    </p>
+                                                </div>
                                             </div>
                                             <div className="mt-4 px-1 flex flex-col pb-1">
                                                 <h3 className=" text-element-black  text-[12px]">
                                                     {design.title}
                                                 </h3>
-                                                <p className="hidden lg:block text-[11px] font-sans text-text-subheading opacity-0 translate-y-1 lg:group-hover:opacity-100 lg:group-hover:translate-y-0 transition-all duration-300 mt-1">
-                                                    Click to view design
-                                                </p>
                                             </div>
                                         </motion.div>
                                     ))}
