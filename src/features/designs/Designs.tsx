@@ -126,9 +126,6 @@ const Designs: React.FC<DesignsProps> = ({ onHideFooter }) => {
         }
     }
 
-    const currentFolderIndex = folders.findIndex(f => f.id === activeFolder?.id)
-    const nextFolder = activeFolder && folders.length > 1 ? folders[(currentFolderIndex + 1) % folders.length] : null
-
     useEffect(() => {
         if (onHideFooter) {
             onHideFooter(!!activeFolder)
@@ -346,7 +343,6 @@ const Designs: React.FC<DesignsProps> = ({ onHideFooter }) => {
 
             <DesignModal
                 design={activeDesign}
-                designs={designs}
                 onClose={() => {
                     if (activeFolder) {
                         setSearchParams({ folder: activeFolder.id })

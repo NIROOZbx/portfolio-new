@@ -8,12 +8,11 @@ import type { DesignItem } from '../../types/designs'
 
 interface DesignModalProps {
     design: DesignItem | null
-    designs?: DesignItem[]
     onClose: () => void
     onNavigate?: (direction: 'next' | 'prev') => void
 }
 
-const DesignModal: React.FC<DesignModalProps> = ({ design, designs = [], onClose, onNavigate }) => {
+const DesignModal: React.FC<DesignModalProps> = ({ design, onClose, onNavigate }) => {
     const [likes, setLikes] = useState(0)
     const [dislikes, setDislikes] = useState(0)
     const [userVote, setUserVote] = useState<'like' | 'dislike' | null>(null)
