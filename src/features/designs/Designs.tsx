@@ -137,7 +137,7 @@ const Designs: React.FC<DesignsProps> = ({ onHideFooter }) => {
 
     return (
         <section className="text-left w-full">
-            <div className="mb-8 min-h-[56px]">
+            <div className="mb-6 min-h-[56px]">
                 {activeFolder ? (
                     <motion.div
                         initial={{ opacity: 0, y: -10 }}
@@ -172,7 +172,7 @@ const Designs: React.FC<DesignsProps> = ({ onHideFooter }) => {
 
                         {/* FOLDER TABS - Segmented Control (iOS Style) */}
                         {folders.length > 1 && (
-                            <div className="mt-5 -mx-6 px-6 md:mx-0 md:px-0 flex">
+                            <div className="mt-3 -mx-6 px-6 md:mx-0 md:px-0 flex">
                                 <div className="inline-flex items-center bg-[#f0f0f0] p-1 rounded-full border border-black/5 overflow-x-auto no-scrollbar max-w-full">
                                     {folders.map(f => {
                                         const isActive = f.id === activeFolder.id;
