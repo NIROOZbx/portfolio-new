@@ -96,22 +96,38 @@ const Designs: React.FC<DesignsProps> = ({ onHideFooter }) => {
     const activeDesign = designIdParam ? (designs.find(d => d.id === designIdParam) || null) : null
 
     const handleNavigate = (direction: 'next' | 'prev') => {
-        if (!activeDesign || designs.length === 0 || !activeFolder) return
-        const currentIndex = designs.findIndex(d => d.id === activeDesign.id)
+        if (!activeDesign || !activeFolder) return
+        
+        // Flatten all designs across all folders to allow seamless cross-folder navigation
+        const allDesignsFlattened: { folderId: string, design: DesignItem }[] = []
+        folders.forEach(f => {
+            const fDesigns = cachedDesigns[f.id] || []
+            fDesigns.forEach(d => allDesignsFlattened.push({ folderId: f.id, design: d }))
+        })
+
+        if (allDesignsFlattened.length === 0) return
+
+        const currentIndex = allDesignsFlattened.findIndex(item => item.design.id === activeDesign.id)
+        if (currentIndex === -1) return
+
         let nextIndex: number
         if (direction === 'next') {
-            nextIndex = (currentIndex + 1) % designs.length
+            nextIndex = (currentIndex + 1) % allDesignsFlattened.length
         } else {
-            nextIndex = (currentIndex - 1 + designs.length) % designs.length
+            nextIndex = (currentIndex - 1 + allDesignsFlattened.length) % allDesignsFlattened.length
         }
-        const nextDesign = designs[nextIndex]
-        if (nextDesign) {
+        
+        const nextItem = allDesignsFlattened[nextIndex]
+        if (nextItem) {
             setSearchParams(
-                { folder: activeFolder.id, design: nextDesign.id },
+                { folder: nextItem.folderId, design: nextItem.design.id },
                 { replace: true }
             )
         }
     }
+
+    const currentFolderIndex = folders.findIndex(f => f.id === activeFolder?.id)
+    const nextFolder = activeFolder && folders.length > 1 ? folders[(currentFolderIndex + 1) % folders.length] : null
 
     useEffect(() => {
         if (onHideFooter) {
@@ -132,20 +148,18 @@ const Designs: React.FC<DesignsProps> = ({ onHideFooter }) => {
                         className="flex flex-col gap-2"
                     >
                         {/* ANIMATION START: Header title and back button fading in and dropping down slightly when opening a folder */}
-                        <div className="flex items-center gap-2 text-text-subheading font-sans text-sm">
+                        <div className="flex items-center text-text-subheading font-sans text-sm">
                             <button
                                 onClick={() => setSearchParams({})}
-                                className="flex items-center gap-1 hover:text-element-black transition-colors group"
+                                className="flex items-center gap-1.5 hover:text-element-black transition-colors group font-medium"
                             >
                                 <ArrowLeft size={16} className="group-hover:-translate-x-1 transition-transform" />
-                                Back
+                                View All Folders
                             </button>
-                            <span className="opacity-50">/</span>
-                            <span className="text-element-black font-medium">{activeFolder.title}</span>
                         </div>
                         <div className="flex flex-col md:flex-row md:items-end justify-between gap-4 mt-2">
                             <div>
-                                <h1 className="font-heading font-semibold text-3xl md:text-5xl text-text-heading leading-[1.1] tracking-tight uppercase">
+                                <h1 className="font-heading font-semibold text-3xl md:text-5xl text-text-heading leading-[1.1] tracking-tight ">
                                     {activeFolder.title}
                                 </h1>
                                 {activeFolder.description && (
@@ -158,6 +172,37 @@ const Designs: React.FC<DesignsProps> = ({ onHideFooter }) => {
                                 {designs.length} {designs.length === 1 ? 'Design' : 'Designs'}
                             </span>
                         </div>
+
+                        {/* FOLDER TABS - Segmented Control (iOS Style) */}
+                        {folders.length > 1 && (
+                            <div className="pt-4 pb-2 mt-2 -mx-6 px-6 md:mx-0 md:px-0 flex">
+                                <div className="inline-flex items-center bg-[#f0f0f0] p-1 rounded-full border border-black/5 overflow-x-auto no-scrollbar max-w-full">
+                                    {folders.map(f => {
+                                        const isActive = f.id === activeFolder.id;
+                                        return (
+                                            <button
+                                                key={`tab-${f.id}`}
+                                                onClick={() => setSearchParams({ folder: f.id })}
+                                                className={`relative px-5 py-1.5 rounded-full text-[13px] font-medium whitespace-nowrap transition-colors duration-200 ${
+                                                    isActive
+                                                        ? 'text-element-black'
+                                                        : 'text-text-subheading hover:text-element-black'
+                                                }`}
+                                            >
+                                                {isActive && (
+                                                    <motion.div
+                                                        layoutId="active-folder-tab"
+                                                        className="absolute inset-0 bg-white rounded-full shadow-[0_1px_3px_rgba(0,0,0,0.1)] border border-black/[0.04]"
+                                                        transition={{ type: 'spring', stiffness: 500, damping: 35 }}
+                                                    />
+                                                )}
+                                                <span className="relative z-10">{f.title}</span>
+                                            </button>
+                                        )
+                                    })}
+                                </div>
+                            </div>
+                        )}
                     </motion.div>
                 ) : (
                     <h1 className="font-heading font-semibold text-4xl md:text-[56px] text-text-heading leading-[1.1] tracking-tight">
@@ -223,9 +268,9 @@ const Designs: React.FC<DesignsProps> = ({ onHideFooter }) => {
                             style={{ willChange: isAnimating ? 'transform, opacity' : 'auto' }}
                             variants={{
                                 hidden: { opacity: 0, scale: 0.95, y: 15 },
-                                show: { 
-                                    opacity: 1, scale: 1, y: 0, 
-                                    transition: { type: 'spring', stiffness: 150, damping: 25, staggerChildren: 0.02 } 
+                                show: {
+                                    opacity: 1, scale: 1, y: 0,
+                                    transition: { type: 'spring', stiffness: 150, damping: 25, staggerChildren: 0.02 }
                                 }
                             }}
                             initial="hidden"
@@ -236,7 +281,7 @@ const Designs: React.FC<DesignsProps> = ({ onHideFooter }) => {
                         >
                             {/* ANIMATION START: The designs grid popping up without expensive scaling. */}
                             {designs.length > 0 ? (
-                                <div className="grid grid-cols-2 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4 md:gap-6 pb-10 min-h-[50vh]">
+                                <div className="grid grid-cols-2 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4 md:gap-6 pb-10 min-h-[50vh] items-start">
                                     {designs.map((design) => (
                                         <motion.div
                                             key={design.id}
@@ -263,7 +308,7 @@ const Designs: React.FC<DesignsProps> = ({ onHideFooter }) => {
                                                 />
                                                 <div className="absolute inset-0 bg-black/40 opacity-0 lg:group-hover:opacity-100 transition-opacity duration-300 pointer-events-none flex items-center justify-center">
                                                     <p className="flex items-center gap-1 text-white text-[13px] font-sans font-medium tracking-wide opacity-0 translate-y-2 lg:group-hover:opacity-100 lg:group-hover:translate-y-0 transition-all duration-300 delay-75">
-                                                       <Eye size={12}/> Click to view design
+                                                        <Eye size={12} /> Click to view design
                                                     </p>
                                                 </div>
                                             </div>
