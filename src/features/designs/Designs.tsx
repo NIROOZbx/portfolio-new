@@ -154,7 +154,7 @@ const Designs: React.FC<DesignsProps> = ({ onHideFooter }) => {
                                 View All Folders
                             </button>
                         </div>
-                        <div className="flex flex-col md:flex-row md:items-end justify-between gap-4 mt-2">
+                        <div className="flex items-start sm:items-end justify-between gap-4 mt-2">
                             <div>
                                 <h1 className="font-heading font-semibold text-3xl md:text-5xl text-text-heading leading-[1.1] tracking-tight ">
                                     {activeFolder.title}
@@ -165,7 +165,7 @@ const Designs: React.FC<DesignsProps> = ({ onHideFooter }) => {
                                     </p>
                                 )}
                             </div>
-                            <span className="font-sans text-xs font-semibold text-text-subheading uppercase tracking-widest whitespace-nowrap">
+                            <span className="font-sans text-xs font-semibold text-text-subheading uppercase tracking-widest whitespace-nowrap shrink-0 mt-2 sm:mt-0">
                                 {designs.length} {designs.length === 1 ? 'Design' : 'Designs'}
                             </span>
                         </div>
