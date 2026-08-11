@@ -44,7 +44,7 @@ function App() {
             <DeferredTelemetry />
             {/* Viewport-wide Hero Background (only on Home tab) */}
             {currentTab === 'home' && (
-                <div className="absolute inset-0 w-full h-full pointer-events-none select-none overflow-hidden z-0">
+                <div className="hidden md:block absolute inset-0 w-full h-full pointer-events-none select-none overflow-hidden z-0">
                     <picture>
                         <source media="(min-width: 1440px)" srcSet={heroImg} />
                         <img
