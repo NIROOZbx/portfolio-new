@@ -49,7 +49,7 @@ export default function VisitorCounter() {
                     direction="up"
                     duration={1.5}
                     enableBlur={true}
-                    className="font-semibold text-element-black text-[10px] tracking-tight group-hover:text-black transition-colors"
+                    className="font-semibold text-element-black text-[10px] tabular-nums tracking-tight group-hover:text-black transition-colors"
                 />
                 <span>visitors</span>
             </span>

@@ -61,7 +61,7 @@ const ProjectCard: React.FC<ProjectCardProps> = ({ project }) => {
                             rel="noopener noreferrer"
                             className="inline-flex items-center gap-2 px-5 py-2.5 bg-element-black hover:bg-neutral-800 text-white rounded-full font-sans text-xs font-semibold transition-all duration-200 shadow-sm active:scale-[0.98] cursor-pointer"
                         >
-                            <img src={githubIcon} className="w-[24px] h-[24px] invert" alt="GitHub repository" />
+                            <img src={githubIcon} width={24} height={24} className="w-[24px] h-[24px] invert" alt="GitHub repository" />
                             Visit GitHub
                         </a>
 

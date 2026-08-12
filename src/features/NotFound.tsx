@@ -10,6 +10,8 @@ const NotFound: React.FC = () => {
             <img 
                 src={noResultsIcon} 
                 alt="Page Not Found" 
+                width={256}
+                height={256}
                 className="w-48 h-48 md:w-64 md:h-64 object-contain mb-8 opacity-90 drop-shadow-sm" 
             />
             <h1 className="font-heading font-semibold text-3xl md:text-5xl text-text-heading mb-4 tracking-tight">
