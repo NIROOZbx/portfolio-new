@@ -42,3 +42,43 @@ export const triggerMailtoFallback = (params: SendEmailParams): string => {
     `Hi Nirooz,\n\n${message}\n\nBest regards,\n${name}\n${email}`
   )}`
 }
+
+export const getGmailComposeUrl = (params?: Partial<SendEmailParams>): string => {
+  const emailAddress = SITE_CONFIG.email
+  const subject = params?.name
+    ? encodeURIComponent(`Project Enquiry from ${params.name}`)
+    : encodeURIComponent('Project Enquiry')
+  const body = params?.message
+    ? encodeURIComponent(`Hi Nirooz,\n\n${params.message}\n\nBest regards,\n${params.name || ''}\n${params.email || ''}`)
+    : ''
+
+  return `https://mail.google.com/mail/?view=cm&fs=1&to=${emailAddress}${subject ? `&su=${subject}` : ''}${body ? `&body=${body}` : ''}`
+}
+
+export const isMobileDevice = (): boolean => {
+  if (typeof window === 'undefined') return false
+  return /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent) || window.innerWidth <= 768
+}
+
+export const getSmartEmailUrl = (params?: Partial<SendEmailParams>): string => {
+  const emailAddress = SITE_CONFIG.email
+  if (isMobileDevice()) {
+    const subject = params?.name
+      ? encodeURIComponent(`Project Enquiry from ${params.name}`)
+      : encodeURIComponent('Project Enquiry')
+    const body = params?.message
+      ? encodeURIComponent(`Hi Nirooz,\n\n${params.message}\n\nBest regards,\n${params.name || ''}\n${params.email || ''}`)
+      : ''
+    return `mailto:${emailAddress}?subject=${subject}&body=${body}`
+  }
+  return getGmailComposeUrl(params)
+}
+
+export const openSmartEmail = (params?: Partial<SendEmailParams>) => {
+  const url = getSmartEmailUrl(params)
+  if (isMobileDevice()) {
+    window.location.href = url
+  } else {
+    window.open(url, '_blank')
+  }
+}

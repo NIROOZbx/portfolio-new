@@ -30,7 +30,7 @@ const NavbarFooter: React.FC = () => {
       label: 'X'
     },
     {
-      url: `https://mail.google.com/mail/?view=cm&to=${SITE_CONFIG.email}`,
+      url: `mailto:${SITE_CONFIG.email}?subject=Project%20Enquiry`,
       icon: <Mail size={18} strokeWidth={2.2} />,
       label: 'Email'
     }
@@ -39,18 +39,21 @@ const NavbarFooter: React.FC = () => {
   return (
     <div className="flex flex-col gap-3 md:mt-auto items-center md:items-start">
       <div className="flex gap-4">
-        {socialLinks.map((link, idx) => (
-          <a
-            key={idx}
-            href={link.url}
-            target="_blank"
-            rel="noopener noreferrer"
-            className="opacity-60 hover:opacity-100 transition-all duration-200 hover:-translate-y-0.5 flex items-center justify-center"
-            aria-label={link.label}
-          >
-            {link.icon}
-          </a>
-        ))}
+        {socialLinks.map((link, idx) => {
+          const isMailto = link.url.startsWith('mailto:')
+          return (
+            <a
+              key={idx}
+              href={link.url}
+              target={isMailto ? undefined : '_blank'}
+              rel={isMailto ? undefined : 'noopener noreferrer'}
+              className="opacity-60 hover:opacity-100 transition-all duration-200 hover:-translate-y-0.5 flex items-center justify-center"
+              aria-label={link.label}
+            >
+              {link.icon}
+            </a>
+          )
+        })}
       </div>
       
       <p className="font-sans text-[12px] text-text-subheading/80">Made with love © {new Date().getFullYear()} Nirooz</p>
