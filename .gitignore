@@ -7,6 +7,7 @@ design.md
 # Font source directories (files are copied to public/fonts/)
 Satoshi_Complete/
 saans-font-family/
+admin/
 
 # Windows junk
 desktop.ini

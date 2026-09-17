@@ -7,74 +7,11 @@ import FolderCard from '../../components/FolderCard'
 import DesignModal from './DesignModal'
 import type { DesignFolder, DesignItem } from '../../types/designs'
 
-// In-memory cache to prevent re-fetching from Supabase when returning to this tab or folder
-let cachedFolders: DesignFolder[] | null = null
-let cachedCounts: Record<string, number> | null = null
-let cachedPreviews: Record<string, string[]> | null = null
-const cachedDesigns: Record<string, DesignItem[]> = {}
-let designsFetchPromise: Promise<void> | null = null
-
-function readDesignsData(): {
-    folders: DesignFolder[]
-    counts: Record<string, number>
-    previews: Record<string, string[]>
-} {
-    if (cachedFolders && cachedCounts && cachedPreviews) {
-        return {
-            folders: cachedFolders,
-            counts: cachedCounts,
-            previews: cachedPreviews,
-        }
-    }
-
-    if (!designsFetchPromise) {
-        designsFetchPromise = (async () => {
-            const [{ data: fData, error: fErr }, { data: dData }] = await Promise.all([
-                supabase.from('design_folders').select('*').order('display_order', { ascending: true }),
-                supabase.from('designs').select('*').order('created_at', { ascending: false })
-            ])
-
-            if (fErr) throw fErr
-            cachedFolders = fData || []
-
-            const newCounts: Record<string, number> = {}
-            const newPreviews: Record<string, string[]> = {}
-            const newCachedDesigns: Record<string, DesignItem[]> = {}
-
-            if (dData) {
-                dData.forEach(d => {
-                    newCounts[d.folder_id] = (newCounts[d.folder_id] || 0) + 1
-
-                    if (!newPreviews[d.folder_id]) {
-                        newPreviews[d.folder_id] = []
-                    }
-                    if (newPreviews[d.folder_id].length < 3 && d.image_url) {
-                        newPreviews[d.folder_id].push(d.image_url)
-                    }
-
-                    if (!newCachedDesigns[d.folder_id]) {
-                        newCachedDesigns[d.folder_id] = []
-                    }
-                    newCachedDesigns[d.folder_id].push(d)
-                })
-
-                Object.keys(newCachedDesigns).forEach(key => {
-                    cachedDesigns[key] = newCachedDesigns[key]
-                })
-            }
-
-            cachedCounts = newCounts
-            cachedPreviews = newPreviews
-        })().catch(err => {
-            console.error('Error fetching folders:', err)
-            cachedFolders = []
-            cachedCounts = {}
-            cachedPreviews = {}
-        })
-    }
-
-    throw designsFetchPromise
-}
+// Stale-While-Revalidate cache variables for 0ms instant loading
+let memoryFolders: DesignFolder[] | null = null
+let memoryCounts: Record<string, number> = {}
+let memoryPreviews: Record<string, string[]> = {}
+let memoryDesignsMap: Record<string, DesignItem[]> = {}
 
 interface DesignsProps {
     onHideFooter?: (hide: boolean) => void
@@ -82,11 +19,70 @@ interface DesignsProps {
 
 const Designs: React.FC<DesignsProps> = ({ onHideFooter }) => {
     const [searchParams, setSearchParams] = useSearchParams()
-    const initialData = readDesignsData()
-    const [folders] = useState<DesignFolder[]>(initialData.folders)
-    const [counts] = useState<Record<string, number>>(initialData.counts)
-    const [previews] = useState<Record<string, string[]>>(initialData.previews)
+    // Initialize with cached data if available (0ms instant render)
+    const [folders, setFolders] = useState<DesignFolder[]>(memoryFolders || [])
+    const [counts, setCounts] = useState<Record<string, number>>(memoryCounts)
+    const [previews, setPreviews] = useState<Record<string, string[]>>(memoryPreviews)
+    const [cachedDesigns, setCachedDesigns] = useState<Record<string, DesignItem[]>>(memoryDesignsMap)
     const [isAnimating, setIsAnimating] = useState(true)
+    const [isLoading, setIsLoading] = useState(!memoryFolders)
+
+    useEffect(() => {
+        let isMounted = true
+        // Revalidate from Supabase in the background
+        const fetchData = async () => {
+            try {
+                const [{ data: fData }, { data: dData }] = await Promise.all([
+                    supabase.from('design_folders').select('*').order('display_order', { ascending: true }),
+                    supabase.from('designs').select('*').order('created_at', { ascending: false })
+                ])
+
+                if (!isMounted) return
+                const freshFolders = fData || []
+                memoryFolders = freshFolders
+                setFolders(freshFolders)
+
+                const newCounts: Record<string, number> = {}
+                const newPreviews: Record<string, string[]> = {}
+                const newDesignsMap: Record<string, DesignItem[]> = {}
+
+                if (dData) {
+                    dData.forEach(d => {
+                        newCounts[d.folder_id] = (newCounts[d.folder_id] || 0) + 1
+
+                        if (!newPreviews[d.folder_id]) {
+                            newPreviews[d.folder_id] = []
+                        }
+                        if (newPreviews[d.folder_id].length < 3 && d.image_url) {
+                            newPreviews[d.folder_id].push(d.image_url)
+                        }
+
+                        if (!newDesignsMap[d.folder_id]) {
+                            newDesignsMap[d.folder_id] = []
+                        }
+                        newDesignsMap[d.folder_id].push(d)
+                    })
+                }
+
+                memoryCounts = newCounts
+                memoryPreviews = newPreviews
+                memoryDesignsMap = newDesignsMap
+
+                setCounts(newCounts)
+                setPreviews(newPreviews)
+                setCachedDesigns(newDesignsMap)
+            } catch (err) {
+                console.error('Error fetching designs:', err)
+            } finally {
+                if (isMounted) setIsLoading(false)
+            }
+        }
+
+        fetchData()
+        return () => {
+            isMounted = false
+        }
+    }, [])
 
     const folderIdParam = searchParams.get('folder')
     const designIdParam = searchParams.get('design')
@@ -128,9 +124,10 @@ const Designs: React.FC<DesignsProps> = ({ onHideFooter }) => {
 
     useEffect(() => {
         if (onHideFooter) {
-            onHideFooter(!!activeFolder)
+            // Hide footer if activeFolder is present or if we are loading a specific folder URL
+            onHideFooter(!!activeFolder || (!!folderIdParam && isLoading))
         }
-    }, [activeFolder, onHideFooter])
+    }, [activeFolder, folderIdParam, isLoading, onHideFooter])
 
 
 
@@ -210,7 +207,17 @@ const Designs: React.FC<DesignsProps> = ({ onHideFooter }) => {
 
             <div className="-mx-6 px-6 md:mx-0 md:px-0">
                 <AnimatePresence mode="wait">
-                    {!activeFolder ? (
+                    {isLoading && folders.length === 0 ? (
+                        <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-4 md:gap-6 pb-10">
+                            {[1, 2, 3, 4, 5].map((i) => (
+                                <div key={`skeleton-${i}`} className="animate-pulse flex flex-col items-center">
+                                    <div className="w-[70%] aspect-[457/406] bg-black/5 rounded-2xl mb-3" />
+                                    <div className="h-3 w-20 bg-black/5 rounded mb-1" />
+                                    <div className="h-2 w-12 bg-black/5 rounded" />
+                                </div>
+                            ))}
+                        </div>
+                    ) : !activeFolder ? (
                         /* FOLDERS GRID */
                         <motion.div
                             key="folders"
@@ -247,7 +254,7 @@ const Designs: React.FC<DesignsProps> = ({ onHideFooter }) => {
                                     />
                                 </motion.div>
                             ))}
-                            {folders.length === 0 && (
+                            {folders.length === 0 && !isLoading && (
                                 <div className="col-span-full w-full max-w-sm mx-auto mt-10 pointer-events-none opacity-60">
                                     <FolderCard
                                         folder={{ id: 'empty', title: 'Empty', display_order: 0 }}

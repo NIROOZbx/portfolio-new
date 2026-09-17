@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useId } from 'react'
 import { motion } from 'framer-motion'
 
 import type { DesignFolder } from '../types/designs'
@@ -11,6 +11,12 @@ interface FolderCardProps {
 }
 
 const FolderCard: React.FC<FolderCardProps> = ({ folder, onClick, itemCount = 0, previews = [] }) => {
+  const baseId = useId().replace(/:/g, '')
+  const backGradId = `backGradient-${baseId}`
+  const innerShadowId = `innerShadow-${baseId}`
+  const frontGradId = `frontGradient-${baseId}`
+  const frontShadowId = `frontInnerShadow-${baseId}`
+
   return (
     <motion.div
       onClick={onClick}
@@ -25,13 +31,13 @@ const FolderCard: React.FC<FolderCardProps> = ({ folder, onClick, itemCount = 0,
       
       {/* Folder Back Panel (SVG) */}
       <svg viewBox="0 0 457 406" className="absolute inset-0 w-full h-full z-0" fill="none" xmlns="http://www.w3.org/2000/svg">
-        <path d="M0.0238481 26.0805C-0.591211 11.8627 10.7694 0 25.0005 0H108.5C115.394 0 122.078 2.37456 127.427 6.72418L154.859 29.0316C159.317 32.6563 164.887 34.6351 170.632 34.6351H267.982H370.706H431.791C446.022 34.6351 457.383 46.4973 456.768 60.7148L450.379 208.5L442.006 382.204C441.363 395.527 430.374 406 417.035 406H40.3788C26.9906 406 15.9789 395.453 15.402 382.077L7.91526 208.5L0.0238481 26.0805Z" fill="url(#backGradient)" filter="url(#innerShadow)" />
+        <path d="M0.0238481 26.0805C-0.591211 11.8627 10.7694 0 25.0005 0H108.5C115.394 0 122.078 2.37456 127.427 6.72418L154.859 29.0316C159.317 32.6563 164.887 34.6351 170.632 34.6351H267.982H370.706H431.791C446.022 34.6351 457.383 46.4973 456.768 60.7148L450.379 208.5L442.006 382.204C441.363 395.527 430.374 406 417.035 406H40.3788C26.9906 406 15.9789 395.453 15.402 382.077L7.91526 208.5L0.0238481 26.0805Z" fill={`url(#${backGradId})`} filter={`url(#${innerShadowId})`} />
         <defs>
-          <linearGradient id="backGradient" x1="0" y1="0" x2="0" y2="1">
+          <linearGradient id={backGradId} x1="0" y1="0" x2="0" y2="1">
             <stop offset="80%" stopColor="#F9F9F9" />
             <stop offset="100%" stopColor="#CDD0D3" />
           </linearGradient>
-          <filter id="innerShadow" x="-10%" y="-10%" width="120%" height="120%">
+          <filter id={innerShadowId} x="-10%" y="-10%" width="120%" height="120%">
             <feOffset dx="0" dy="4" />
             <feGaussianBlur stdDeviation="6" result="offset-blur" />
             <feComposite operator="out" in="SourceGraphic" in2="offset-blur" result="inverse" />
@@ -136,13 +142,13 @@ const FolderCard: React.FC<FolderCardProps> = ({ folder, onClick, itemCount = 0,
       
       {/* Folder Front Panel (SVG) */}
       <svg viewBox="0 0 456 268" className="absolute bottom-0 inset-x-0 w-full h-auto z-20 drop-shadow-[0_-4px_15px_rgba(0,0,0,0.06)]" fill="none" xmlns="http://www.w3.org/2000/svg">
-        <path d="M0.0482152 26.5363C-0.837373 12.1522 10.5896 0 25.001 0H430.679C445.146 0 456.592 12.2413 455.623 26.6753L440.981 244.675C440.099 257.803 429.194 268 416.037 268H38.4226C25.2121 268 14.2817 257.722 13.4699 244.536L0.0482152 26.5363Z" fill="url(#frontGradient)" filter="url(#frontInnerShadow)" stroke="rgba(255,255,255,0.9)" strokeWidth="1.5" />
+        <path d="M0.0482152 26.5363C-0.837373 12.1522 10.5896 0 25.001 0H430.679C445.146 0 456.592 12.2413 455.623 26.6753L440.981 244.675C440.099 257.803 429.194 268 416.037 268H38.4226C25.2121 268 14.2817 257.722 13.4699 244.536L0.0482152 26.5363Z" fill={`url(#${frontGradId})`} filter={`url(#${frontShadowId})`} stroke="rgba(255,255,255,0.9)" strokeWidth="1.5" />
         <defs>
-          <linearGradient id="frontGradient" x1="0" y1="0" x2="0" y2="1">
+          <linearGradient id={frontGradId} x1="0" y1="0" x2="0" y2="1">
             <stop offset="0%" stopColor="#FEFFFF" />
             <stop offset="100%" stopColor="#F3F3F3" />
           </linearGradient>
-          <filter id="frontInnerShadow" x="-10%" y="-10%" width="120%" height="120%">
+          <filter id={frontShadowId} x="-10%" y="-10%" width="120%" height="120%">
             <feOffset dx="0" dy="5" />
             <feGaussianBlur stdDeviation="8" result="offset-blur" />
             <feComposite operator="out" in="SourceGraphic" in2="offset-blur" result="inverse" />
