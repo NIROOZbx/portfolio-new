@@ -50,7 +50,7 @@ const About: React.FC = () => {
               </span>
             </div>
             <span className="font-sans text-[13px] text-text-subheading/60 font-medium select-none">
-              Present
+              Jun 2025 – Jun 2026
             </span>
           </div>
         </div>

@@ -5,6 +5,7 @@ import { ArrowLeft, Eye } from 'lucide-react'
 import { supabase } from '../../services/supabaseClient'
 import FolderCard from '../../components/FolderCard'
 import DesignModal from './DesignModal'
+import DesignsSkeleton from './DesignsSkeleton'
 import type { DesignFolder, DesignItem } from '../../types/designs'
 
 // Stale-While-Revalidate cache variables for 0ms instant loading
@@ -12,6 +13,15 @@ let memoryFolders: DesignFolder[] | null = null
 let memoryCounts: Record<string, number> = {}
 let memoryPreviews: Record<string, string[]> = {}
 let memoryDesignsMap: Record<string, DesignItem[]> = {}
+
+try {
+    const cachedFoldersStr = localStorage.getItem('portfolio_cached_folders')
+    if (cachedFoldersStr && !memoryFolders) {
+        memoryFolders = JSON.parse(cachedFoldersStr)
+    }
+} catch {
+    // ignore localStorage read error
+}
 
 interface DesignsProps {
     onHideFooter?: (hide: boolean) => void
@@ -40,6 +50,12 @@ const Designs: React.FC<DesignsProps> = ({ onHideFooter }) => {
                 if (!isMounted) return
                 const freshFolders = fData || []
                 memoryFolders = freshFolders
+                try {
+                    localStorage.setItem('portfolio_folder_count', String(freshFolders.length))
+                    localStorage.setItem('portfolio_cached_folders', JSON.stringify(freshFolders))
+                } catch {
+                    // ignore localStorage write error
+                }
                 setFolders(freshFolders)
 
                 const newCounts: Record<string, number> = {}
@@ -208,15 +224,7 @@ const Designs: React.FC<DesignsProps> = ({ onHideFooter }) => {
             <div className="-mx-6 px-6 md:mx-0 md:px-0">
                 <AnimatePresence mode="wait">
                     {isLoading && folders.length === 0 ? (
-                        <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-4 md:gap-6 pb-10">
-                            {[1, 2, 3, 4, 5].map((i) => (
-                                <div key={`skeleton-${i}`} className="animate-pulse flex flex-col items-center">
-                                    <div className="w-[70%] aspect-[457/406] bg-black/5 rounded-2xl mb-3" />
-                                    <div className="h-3 w-20 bg-black/5 rounded mb-1" />
-                                    <div className="h-2 w-12 bg-black/5 rounded" />
-                                </div>
-                            ))}
-                        </div>
+                        <DesignsSkeleton showHeader={false} />
                     ) : !activeFolder ? (
                         /* FOLDERS GRID */
                         <motion.div
