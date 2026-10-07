@@ -57,7 +57,7 @@ const Home: React.FC<HomeProps> = ({ onViewDesigns, onGetInTouch }) => {
 
                 {/* Line 3 (subtext) */}
                 <p className="text-[16px] sm:text-[18px] font-normal leading-relaxed text-text-subheading m-0 max-w-[560px] mx-auto text-balance">
-                    I research your product, understand your users, 
+                    I research your product, understand your users,
                     design <br className="hidden sm:block" /> the experience, and{' '}
                     <span className="relative inline-block whitespace-nowrap mx-2">
                         <span className="relative z-10 font-medium text-element-black">build it.</span>
