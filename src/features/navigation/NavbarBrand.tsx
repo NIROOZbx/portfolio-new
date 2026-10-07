@@ -8,7 +8,7 @@ interface NavbarBrandProps {
 
 const TITLES = [
   'Full Stack Engineer',
-  'UI/UX Developer',
+  'Product Designer',
   'Software Engineer'
 ]
 
@@ -34,7 +34,7 @@ const NavbarBrand: React.FC<NavbarBrandProps> = ({ onNavigateHome }) => {
       />
       <div className="flex flex-col justify-center">
         <h2 className="font-heading font-semibold text-[17px] text-element-black leading-none tracking-tight uppercase transition-colors duration-200 group-hover:text-text-heading/85">
-          NIROOZ.DEV
+          NIROOZ
         </h2>
         <div className="h-5 mt-1 overflow-hidden flex items-center">
           <TextAnimate

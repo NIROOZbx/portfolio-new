@@ -19,22 +19,48 @@ const Home: React.FC<HomeProps> = ({ onViewDesigns, onGetInTouch }) => {
 
             {/* Centered Hero Content */}
             <div className="max-w-[800px] mx-auto px-4 py-12 text-center relative z-10 w-full flex flex-col items-center justify-center">
-                {/* Line 1 (eyebrow) */}
-                
-                <p className="text-[16px] font-medium mb-3 bg-[linear-gradient(3.65deg,var(--color-gradient-start),var(--color-gradient-end))] bg-clip-text text-transparent inline-block">
-                    Hi, I'm Nirooz
-                </p>
+                {/* Available for Work Pill Badge */}
+                <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-white border border-black/[0.08] shadow-[0_2px_8px_rgba(0,0,0,0.04)] mb-4 select-none">
+                    <span className="relative flex h-2 w-2">
+                        <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-emerald-400 opacity-75"></span>
+                        <span className="relative inline-flex rounded-full h-2 w-2 bg-emerald-500"></span>
+                    </span>
+                    <span className="text-xs sm:text-sm font-medium text-neutral-800 tracking-tight">
+                        Available for Work
+                    </span>
+                </div>
 
                 {/* Line 2 (headline) */}
-                <h1 className="font-heading font-semibold text-3xl sm:text-4xl md:text-[38px] leading-[1.1] tracking-tight text-element-black mb-2 md:mb-6 text-center text-balance mx-auto">
-                    <span className="md:whitespace-nowrap">Not every business problem needs a website.</span> <br className="hidden md:block" />I figure out <span className="bg-[linear-gradient(3.65deg,var(--color-gradient-start),var(--color-gradient-end))] bg-clip-text text-transparent pb-[2px] inline-block">what does.</span>
+                <h1 className="font-heading font-semibold text-[22px] xs:text-[25px] sm:text-4xl md:text-[42px] leading-[1.2] tracking-tight text-element-black mb-3 md:mb-6 text-center mx-auto w-full">
+                    <span className="whitespace-nowrap inline-block">
+                        Your{' '}
+                        <span className="bg-[linear-gradient(3.65deg,var(--color-gradient-start),var(--color-gradient-end))] bg-clip-text text-transparent pb-[2px]">
+                            design{' '}
+                        </span>
+                        <img
+                            src="/pen-icon.png"
+                            alt="Design icon"
+                            className="inline-block w-6 h-6 sm:w-10 sm:h-10 md:w-[42px] md:h-[42px] align-middle mx-1 object-contain -translate-y-[2px] sm:-translate-y-[3px] select-none"
+                        />{' '}
+                        <span className="bg-[linear-gradient(3.65deg,var(--color-gradient-start),var(--color-gradient-end))] bg-clip-text text-transparent pb-[2px]">
+                            &amp; product partner
+                        </span>
+                    </span>{' '}
+                    <br className="block sm:hidden" />
+                    <span className="whitespace-nowrap inline-block">
+                        from{' '}
+                        <span className="bg-[linear-gradient(3.65deg,var(--color-gradient-start),var(--color-gradient-end))] bg-clip-text text-transparent pb-[2px]">
+                            idea to launch.
+                        </span>
+                    </span>
                 </h1>
 
                 {/* Line 3 (subtext) */}
-                <p className="text-[17px] font-normal leading-relaxed text-text-subheading m-0">
-                    I find what's slowing you down, then build a fix that{" "}
+                <p className="text-[16px] sm:text-[18px] font-normal leading-relaxed text-text-subheading m-0 max-w-[560px] mx-auto text-balance">
+                    I research your product, understand your users, 
+                    design <br className="hidden sm:block" /> the experience, and{' '}
                     <span className="relative inline-block whitespace-nowrap mx-2">
-                        <span className="relative z-10 font-medium text-element-black">converts.</span>
+                        <span className="relative z-10 font-medium text-element-black">build it.</span>
                         <motion.svg
                             initial={{ opacity: 0 }}
                             animate={{ opacity: 1 }}
@@ -60,13 +86,13 @@ const Home: React.FC<HomeProps> = ({ onViewDesigns, onGetInTouch }) => {
 
                 {/* Central CTA Buttons */}
                 <div className="flex flex-row gap-3 sm:gap-4 items-center justify-center w-full mt-8 mb-8">
-                    {/* Get in touch CTA (Black Pill Button) */}
+                    {/* Start a project CTA (Black Pill Button) */}
                     <button
                         onClick={onGetInTouch}
                         className="w-fit h-[44px] rounded-[100px] bg-element-black hover:bg-neutral-800 text-white flex items-center gap-3 pl-5 pr-2 text-[14px] font-bold transition-all active:scale-[0.98] cursor-pointer shadow-sm relative group select-none border-0"
-                        aria-label="Get in touch"
+                        aria-label="Start a project"
                     >
-                        <span>Get in touch</span>
+                        <span>Start a project</span>
                         <span className="w-7 h-7 rounded-full bg-white flex items-center justify-center text-element-black transition-transform duration-300 group-hover:translate-x-0.5 group-hover:-translate-y-0.5">
                             <ArrowLeft size={14} className="rotate-[135deg]" strokeWidth={2.8} />
                         </span>
