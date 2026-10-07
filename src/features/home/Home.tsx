@@ -38,7 +38,7 @@ const Home: React.FC<HomeProps> = ({ onViewDesigns, onGetInTouch }) => {
                             design{' '}
                         </span>
                         <img
-                            src="/pen-icon.png"
+                            src="/pen-icon.webp"
                             alt="Design icon"
                             className="inline-block w-6 h-6 sm:w-10 sm:h-10 md:w-[42px] md:h-[42px] align-middle mx-1 object-contain -translate-y-[2px] sm:-translate-y-[3px] select-none"
                         />{' '}

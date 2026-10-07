@@ -1,0 +1,33 @@
+{
+  "$schema": "https://agenticresourcediscovery.org/schemas/v1/ai-catalog.json",
+  "specVersion": "1.0",
+  "host": {
+    "displayName": "Nirooz",
+    "identifier": "https://nirooz.xyz"
+  },
+  "entries": [
+    {
+      "identifier": "urn:air:nirooz.xyz:portfolio",
+      "displayName": "Nirooz Portfolio & Services",
+      "type": "text/markdown",
+      "url": "https://nirooz.xyz/llms.txt",
+      "description": "Full-stack developer & UI/UX designer specializing in high-performance web applications, product design, and software engineering.",
+      "representativeQueries": [
+        "Find a full-stack developer",
+        "Hire a UI/UX product designer",
+        "Web application engineering services"
+      ]
+    },
+    {
+      "identifier": "urn:air:nirooz.xyz:projects",
+      "displayName": "Nirooz Projects & Case Studies",
+      "type": "application/json",
+      "url": "https://nirooz.xyz/projects",
+      "description": "Featured software engineering projects, open-source work, and interactive UI showcases.",
+      "representativeQueries": [
+        "View developer projects and case studies",
+        "Full-stack React Go TypeScript portfolio"
+      ]
+    }
+  ]
+}
