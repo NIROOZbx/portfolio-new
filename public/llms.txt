@@ -1,9 +1,9 @@
-# Nirooz — Full-Stack Developer & UI/UX Designer
+# Nirooz — Product Designer & Full-Stack Engineer
 
-> Full-stack developer specializing in premium UI/UX, high-performance web apps, and business automation. Open to full-time, freelance, and collaborations.
+> I design thoughtful user experiences and build high-performance web applications. Open to full-time, freelance, and collaborations.
 
 ## About
-Nirooz is a Full stack engineer and designer crafting modern, high-performance digital experiences. With expertise across frontend and backend development, responsive UI design, and systems architecture, Nirooz builds scalable web applications with a focus on polished aesthetics and speed.
+Nirooz is a product designer and full-stack engineer crafting modern, high-performance digital experiences and thoughtful UI/UX. With expertise across frontend and backend development, responsive UI design, and systems architecture, Nirooz builds scalable web applications with a focus on polished aesthetics and speed.
 
 ## Navigation & Pages
 - [Home](https://nirooz.xyz/): Overview and introduction to Nirooz's portfolio and GitHub contributions.
