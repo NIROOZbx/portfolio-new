@@ -87,7 +87,7 @@ const Contact: React.FC = () => {
                             </p>
                             <button
                                 onClick={() => setStatus('idle')}
-                                className="px-6 py-2.5 bg-white hover:bg-neutral-100 text-element-black font-sans text-sm font-semibold rounded-full transition-all duration-200 cursor-pointer active:scale-[0.98]"
+                                className="px-6 py-2.5 bg-primary-bg hover:bg-neutral-100 text-element-black font-sans text-sm font-semibold rounded-full transition-all duration-200 cursor-pointer active:scale-[0.98]"
                             >
                                 Send another message
                             </button>
@@ -147,7 +147,7 @@ const Contact: React.FC = () => {
                             <button
                                 type="submit"
                                 disabled={isSending}
-                                className="w-full flex items-center justify-center gap-2 px-6 py-3.5 bg-white hover:bg-neutral-100 disabled:bg-neutral-400 text-element-black font-sans text-sm font-semibold rounded-full transition-all duration-200 cursor-pointer active:scale-[0.98] select-none"
+                                className="w-full flex items-center justify-center gap-2 px-6 py-3.5 bg-primary-bg hover:bg-neutral-100 disabled:bg-neutral-400 text-element-black font-sans text-sm font-semibold rounded-full transition-all duration-200 cursor-pointer active:scale-[0.98] select-none"
                             >
                                 {isSending ? (
                                     <span>Sending...</span>

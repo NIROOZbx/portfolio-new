@@ -190,7 +190,7 @@ const DesignModal: React.FC<DesignModalProps> = ({ design, onClose, onNavigate }
                                     onClick={() => handleVote('like')}
                                     className={`flex items-center gap-2 px-4 py-2 rounded-full transition-colors border ${userVote === 'like'
                                             ? 'bg-element-black text-white border-element-black'
-                                            : 'bg-white hover:bg-[#f5f5f5] text-element-black border-border'
+                                            : 'bg-primary-bg hover:bg-[#f5f5f5] text-element-black border-border'
                                         }`}
                                 >
                                     <ThumbsUp size={16} />
@@ -201,7 +201,7 @@ const DesignModal: React.FC<DesignModalProps> = ({ design, onClose, onNavigate }
                                     onClick={() => handleVote('dislike')}
                                     className={`flex items-center gap-2 px-4 py-2 rounded-full transition-colors border ${userVote === 'dislike'
                                             ? 'bg-element-black text-white border-element-black'
-                                            : 'bg-white hover:bg-[#f5f5f5] text-element-black border-border'
+                                            : 'bg-primary-bg hover:bg-[#f5f5f5] text-element-black border-border'
                                         }`}
                                 >
                                     <ThumbsDown size={16} />

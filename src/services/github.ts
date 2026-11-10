@@ -15,7 +15,13 @@ interface JogruberResponse {
   contributions: JogruberContribution[]
 }
 
+let cachedGithubData: { contributions: Contribution[]; total: number } | null = null
+
 export async function fetchContributions(): Promise<{ contributions: Contribution[]; total: number }> {
+  if (cachedGithubData) {
+    return cachedGithubData
+  }
+
   const res = await fetch('https://github-contributions-api.jogruber.de/v4/NIROOZbx?y=last')
   if (!res.ok) {
     throw new Error(`Failed to fetch GitHub contributions: ${res.statusText}`)
@@ -31,5 +37,6 @@ export async function fetchContributions(): Promise<{ contributions: Contributio
 
   const total = data.total?.lastYear ?? flattened.reduce((acc, curr) => acc + curr.contributionCount, 0)
 
-  return { contributions: flattened, total }
+  cachedGithubData = { contributions: flattened, total }
+  return cachedGithubData
 }

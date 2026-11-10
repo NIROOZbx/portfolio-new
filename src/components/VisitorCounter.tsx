@@ -1,22 +1,39 @@
 import { useEffect, useState } from 'react'
 import CountUp from './CountUp'
 
+let cachedViews: number | null = (() => {
+    try {
+        const val = sessionStorage.getItem('portfolio_total_views')
+        return val ? Number(val) : null
+    } catch {
+        return null
+    }
+})()
+let hasRequested = cachedViews !== null
+let hasAnimatedCountUp = false
+
 export default function VisitorCounter() {
-    const [views, setViews] = useState<number | null>(null)
+    const [views, setViews] = useState<number | null>(cachedViews)
 
     useEffect(() => {
-        const requestTimer = window.setTimeout(() => {
-            void import('../services/visitorStats').then(({ getAndIncrementTotalViews }) => {
-                getAndIncrementTotalViews().then((count) => {
-                    if (count !== null) {
-                        setViews(count)
-                    }
-                })
-            })
-        }, 2500)
+        if (cachedViews !== null || hasRequested) {
+            if (views === null && cachedViews !== null) {
+                setViews(cachedViews)
+            }
+            return
+        }
 
-        return () => window.clearTimeout(requestTimer)
-    }, [])
+        hasRequested = true
+
+        void import('../services/visitorStats').then(({ getAndIncrementTotalViews }) => {
+            getAndIncrementTotalViews().then((count) => {
+                if (count !== null) {
+                    cachedViews = count
+                    setViews(count)
+                }
+            })
+        })
+    }, [views])
 
     if (views === null) {
         return (
@@ -42,15 +59,24 @@ export default function VisitorCounter() {
 
             {/* Counter Text */}
             <span className="inline-flex items-baseline gap-1.5 font-sans text-[10px] font-medium text-text-subheading/90">
-                <CountUp
-                    from={0}
-                    to={views}
-                    separator=","
-                    direction="up"
-                    duration={1.5}
-                    enableBlur={true}
-                    className="font-semibold text-element-black text-[10px] tabular-nums tracking-tight group-hover:text-black transition-colors"
-                />
+                {hasAnimatedCountUp ? (
+                    <span className="font-semibold text-element-black text-[10px] tabular-nums tracking-tight group-hover:text-black transition-colors">
+                        {views.toLocaleString()}
+                    </span>
+                ) : (
+                    <CountUp
+                        from={0}
+                        to={views}
+                        separator=","
+                        direction="up"
+                        duration={1.5}
+                        enableBlur={true}
+                        onEnd={() => {
+                            hasAnimatedCountUp = true
+                        }}
+                        className="font-semibold text-element-black text-[10px] tabular-nums tracking-tight group-hover:text-black transition-colors"
+                    />
+                )}
                 <span>visitors</span>
             </span>
         </div>

@@ -6,6 +6,8 @@ import NavbarFooter from '../navigation/NavbarFooter'
 import VisitorCounter from '../../components/VisitorCounter'
 import { useMediaQuery } from '../../hooks/useMediaQuery'
 
+let hasAnimatedBuildLoop = false
+
 interface HomeProps {
     onViewDesigns: () => void
     onGetInTouch: () => void
@@ -20,7 +22,7 @@ const Home: React.FC<HomeProps> = ({ onViewDesigns, onGetInTouch }) => {
             {/* Centered Hero Content */}
             <div className="max-w-[800px] mx-auto px-4 py-12 text-center relative z-10 w-full flex flex-col items-center justify-center">
                 {/* Available for Work Pill Badge */}
-                <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-white border border-black/[0.08] shadow-[0_2px_8px_rgba(0,0,0,0.04)] mb-4 select-none">
+                <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-primary-bg border border-black/[0.08] shadow-[0_2px_8px_rgba(0,0,0,0.04)] mb-4 select-none">
                     <span className="relative flex h-2 w-2">
                         <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-emerald-400 opacity-75"></span>
                         <span className="relative inline-flex rounded-full h-2 w-2 bg-emerald-500"></span>
@@ -62,7 +64,7 @@ const Home: React.FC<HomeProps> = ({ onViewDesigns, onGetInTouch }) => {
                     <span className="relative inline-block whitespace-nowrap mx-2">
                         <span className="relative z-10 font-medium text-element-black">build it.</span>
                         <motion.svg
-                            initial={{ opacity: 0 }}
+                            initial={hasAnimatedBuildLoop ? false : { opacity: 0 }}
                             animate={{ opacity: 1 }}
                             transition={{ duration: 0.3, delay: 0.2 }}
                             className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[180%] h-[180%] -z-10 text-neutral-500/60 pointer-events-none -rotate-2"
@@ -75,9 +77,12 @@ const Home: React.FC<HomeProps> = ({ onViewDesigns, onGetInTouch }) => {
                             strokeLinejoin="round"
                         >
                             <motion.path
-                                initial={{ pathLength: 0 }}
+                                initial={hasAnimatedBuildLoop ? { pathLength: 1 } : { pathLength: 0 }}
                                 animate={{ pathLength: 1 }}
-                                transition={{ duration: 0.8, delay: 0.3, ease: "easeInOut" }}
+                                transition={hasAnimatedBuildLoop ? { duration: 0 } : { duration: 0.8, delay: 0.3, ease: "easeInOut" }}
+                                onAnimationComplete={() => {
+                                    hasAnimatedBuildLoop = true
+                                }}
                                 d="M 15 20 C 15 5, 85 5, 85 20 C 85 35, 15 35, 18 20 C 20 10, 80 12, 80 20"
                             />
                         </motion.svg>
@@ -93,7 +98,7 @@ const Home: React.FC<HomeProps> = ({ onViewDesigns, onGetInTouch }) => {
                         aria-label="Start a project"
                     >
                         <span>Start a project</span>
-                        <span className="w-7 h-7 rounded-full bg-white flex items-center justify-center text-element-black transition-transform duration-300 group-hover:translate-x-0.5 group-hover:-translate-y-0.5">
+                        <span className="w-7 h-7 rounded-full bg-primary-bg flex items-center justify-center text-element-black transition-transform duration-300 group-hover:translate-x-0.5 group-hover:-translate-y-0.5">
                             <ArrowLeft size={14} className="rotate-[135deg]" strokeWidth={2.8} />
                         </span>
                     </button>

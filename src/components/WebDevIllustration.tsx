@@ -7,12 +7,12 @@ const WebDevIllustration: React.FC = () => {
       <div className="absolute w-[180px] h-[180px] bg-gradient-to-tr from-blue-300/15 to-indigo-300/15 rounded-full blur-2xl top-[10%] right-[10%] z-0" />
 
       {/* Browser Window Mockup Container */}
-      <div className="w-[265px] h-[185px] rounded-2xl bg-white border border-[#e5e4e7] shadow-[0_16px_40px_-16px_rgba(0,0,0,0.12)] flex flex-col overflow-hidden relative z-10 transition-all duration-300 group-hover:-translate-y-2 group-hover:shadow-[0_24px_48px_-12px_rgba(0,0,0,0.18)]">
+      <div className="w-[265px] h-[185px] rounded-2xl bg-primary-bg border border-[#e5e4e7] shadow-[0_16px_40px_-16px_rgba(0,0,0,0.12)] flex flex-col overflow-hidden relative z-10 transition-all duration-300 group-hover:-translate-y-2 group-hover:shadow-[0_24px_48px_-12px_rgba(0,0,0,0.18)]">
         {/* Gloss Screen Reflection */}
         <div className="absolute inset-0 pointer-events-none bg-gradient-to-tr from-transparent via-white/5 to-white/15 rotate-[25deg] -translate-y-[45%] z-20" />
 
         {/* Window header (Browser Chrome) */}
-        <div className="h-[28px] px-3 border-b border-[#e5e4e7]/60 flex items-center relative bg-white/40 z-10">
+        <div className="h-[28px] px-3 border-b border-[#e5e4e7]/60 flex items-center relative bg-primary-bg/40 z-10">
           {/* Close/Min/Max Dots */}
           <div className="flex gap-1 absolute left-3">
             <div className="w-1.5 h-1.5 rounded-full bg-[#FF5F56]" />
@@ -27,7 +27,7 @@ const WebDevIllustration: React.FC = () => {
         </div>
 
         {/* Window Body (Webpage content) */}
-        <div className="grow p-3 flex flex-col gap-2 relative bg-white/85 z-10 text-left">
+        <div className="grow p-3 flex flex-col gap-2 relative bg-primary-bg/85 z-10 text-left">
           {/* Webpage Header */}
           <div className="flex justify-between items-center mb-1">
             <div className="w-3.5 h-3.5 rounded-full bg-[#e5e4e7]" />

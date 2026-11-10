@@ -8,7 +8,7 @@ const UIUXIllustration: React.FC = () => {
 
 
       {/* Phone Outline Mockup */}
-      <div className="w-[210px] h-[340px] border-[2.5px] border-[#1a1a1a] rounded-t-[36px] bg-white absolute top-[35px] left-1/2 -translate-x-1/2 shadow-[inset_0_0_12px_rgba(0,0,0,0.06),0_16px_40px_-16px_rgba(0,0,0,0.15)] overflow-hidden flex flex-col pt-10 transition-all duration-300 group-hover:-translate-y-2 group-hover:shadow-[inset_0_0_12px_rgba(0,0,0,0.08),0_24px_48px_-12px_rgba(0,0,0,0.2)]">
+      <div className="w-[210px] h-[340px] border-[2.5px] border-[#1a1a1a] rounded-t-[36px] bg-primary-bg absolute top-[35px] left-1/2 -translate-x-1/2 shadow-[inset_0_0_12px_rgba(0,0,0,0.06),0_16px_40px_-16px_rgba(0,0,0,0.15)] overflow-hidden flex flex-col pt-10 transition-all duration-300 group-hover:-translate-y-2 group-hover:shadow-[inset_0_0_12px_rgba(0,0,0,0.08),0_24px_48px_-12px_rgba(0,0,0,0.2)]">
         {/* Dynamic Island */}
         <div className="w-[56px] h-[15px] bg-[#1a1a1a] rounded-full absolute top-[10px] left-1/2 -translate-x-1/2 z-20" />
 

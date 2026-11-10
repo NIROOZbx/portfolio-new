@@ -43,7 +43,7 @@ const ProgressIndicator: React.FC = () => {
               className="w-full max-w-[260px] lg:w-[201px] flex flex-col items-center gap-3 relative z-10"
             >
               {/* Icon Circle */}
-              <div className="w-[60px] h-[60px] flex items-center justify-center bg-white rounded-[30px] border-2 border-text-subheading p-4 shadow-sm hover:scale-[1.02] transition-all duration-200 select-none">
+              <div className="w-[60px] h-[60px] flex items-center justify-center bg-primary-bg rounded-[30px] border-2 border-text-subheading p-4 shadow-sm hover:scale-[1.02] transition-all duration-200 select-none">
                 {step.icon}
               </div>
 

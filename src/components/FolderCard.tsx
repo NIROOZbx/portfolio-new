@@ -34,7 +34,7 @@ const FolderCard: React.FC<FolderCardProps> = ({ folder, onClick, itemCount = 0,
         <path d="M0.0238481 26.0805C-0.591211 11.8627 10.7694 0 25.0005 0H108.5C115.394 0 122.078 2.37456 127.427 6.72418L154.859 29.0316C159.317 32.6563 164.887 34.6351 170.632 34.6351H267.982H370.706H431.791C446.022 34.6351 457.383 46.4973 456.768 60.7148L450.379 208.5L442.006 382.204C441.363 395.527 430.374 406 417.035 406H40.3788C26.9906 406 15.9789 395.453 15.402 382.077L7.91526 208.5L0.0238481 26.0805Z" fill={`url(#${backGradId})`} filter={`url(#${innerShadowId})`} />
         <defs>
           <linearGradient id={backGradId} x1="0" y1="0" x2="0" y2="1">
-            <stop offset="80%" stopColor="#F9F9F9" />
+            <stop offset="80%" stopColor="var(--color-primary-bg)" />
             <stop offset="100%" stopColor="#CDD0D3" />
           </linearGradient>
           <filter id={innerShadowId} x="-10%" y="-10%" width="120%" height="120%">
@@ -145,7 +145,7 @@ const FolderCard: React.FC<FolderCardProps> = ({ folder, onClick, itemCount = 0,
         <path d="M0.0482152 26.5363C-0.837373 12.1522 10.5896 0 25.001 0H430.679C445.146 0 456.592 12.2413 455.623 26.6753L440.981 244.675C440.099 257.803 429.194 268 416.037 268H38.4226C25.2121 268 14.2817 257.722 13.4699 244.536L0.0482152 26.5363Z" fill={`url(#${frontGradId})`} filter={`url(#${frontShadowId})`} stroke="rgba(255,255,255,0.9)" strokeWidth="1.5" />
         <defs>
           <linearGradient id={frontGradId} x1="0" y1="0" x2="0" y2="1">
-            <stop offset="0%" stopColor="#FEFFFF" />
+            <stop offset="0%" stopColor="var(--color-primary-bg)" />
             <stop offset="100%" stopColor="#F3F3F3" />
           </linearGradient>
           <filter id={frontShadowId} x="-10%" y="-10%" width="120%" height="120%">

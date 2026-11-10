@@ -45,7 +45,7 @@ const ProjectCard: React.FC<ProjectCardProps> = ({ project }) => {
                         {project.tags.map((tag, idx) => (
                             <span
                                 key={idx}
-                                className="px-3 py-1 bg-white border border-border text-text-subheading rounded-full text-[11px] font-medium transition-all duration-200 hover:bg-neutral-50 select-none"
+                                className="px-3 py-1 bg-primary-bg border border-border text-text-subheading rounded-full text-[11px] font-medium transition-all duration-200 hover:bg-neutral-50 select-none"
                             >
                                 {tag}
                             </span>
@@ -71,7 +71,7 @@ const ProjectCard: React.FC<ProjectCardProps> = ({ project }) => {
                                 href={project.liveUrl}
                                 target="_blank"
                                 rel="noopener noreferrer"
-                                className="inline-flex items-center gap-2 px-5 py-2.5 bg-gradient-to-b from-white to-[#f0f0f0] border border-[#d2d2d5] hover:to-[#e4e4e6] text-text-heading rounded-full font-sans text-xs font-semibold transition-all duration-200 shadow-sm active:scale-[0.98] cursor-pointer"
+                                className="inline-flex items-center gap-2 px-5 py-2.5 bg-gradient-to-b from-primary-bg to-[#f0f0f0] border border-[#d2d2d5] hover:to-[#e4e4e6] text-text-heading rounded-full font-sans text-xs font-semibold transition-all duration-200 shadow-sm active:scale-[0.98] cursor-pointer"
                             >
                                 <ExternalLink size={16} strokeWidth={2.2} />
                                 Live Site

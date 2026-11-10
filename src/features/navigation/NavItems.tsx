@@ -31,7 +31,7 @@ const NavItems: React.FC<NavItemsProps> = ({ currentTab, setCurrentTab }) => {
               border-0 rounded-lg cursor-pointer text-left font-sans
               text-[15px] font-medium transition-all duration-200 ease-out select-none
               ${active
-                                ? 'bg-element-black text-primary-bg'
+                                ? 'bg-nav-active-bg text-nav-active-text'
                                 : 'text-text-subheading bg-transparent hover:text-element-black hover:bg-card-bg hover:translate-x-1 active:scale-[0.98]'}
             `}
                     >

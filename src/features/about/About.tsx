@@ -40,7 +40,7 @@ const About: React.FC = () => {
           </h2>
           
           {/* Experience Card */}
-          <div className="border border-border rounded-[20px] p-5 bg-white flex justify-between items-start hover:shadow-sm transition-all duration-200">
+          <div className="border border-border rounded-[20px] p-5 bg-primary-bg flex justify-between items-start hover:shadow-sm transition-all duration-200">
             <div className="flex flex-col text-left">
               <h3 className="font-heading font-semibold text-lg text-text-heading leading-[1.1]">
                 Bridgeon

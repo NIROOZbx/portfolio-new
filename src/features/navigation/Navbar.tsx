@@ -79,7 +79,7 @@ const Navbar: React.FC<NavbarProps> = ({ currentTab, setCurrentTab, scrollRef })
                             {active && (
                                 <motion.div
                                     layoutId="nav-pill"
-                                    className="absolute inset-0 rounded-4xl bg-element-black shadow-[0_2px_8px_rgba(0,0,0,0.25)]"
+                                    className="absolute inset-0 rounded-4xl bg-nav-active-bg shadow-[0_2px_8px_rgba(0,0,0,0.08)]"
                                     transition={{
                                         type: 'spring',
                                         stiffness: 420,
@@ -91,7 +91,7 @@ const Navbar: React.FC<NavbarProps> = ({ currentTab, setCurrentTab, scrollRef })
                             {/* Icon sits above the pill */}
                             <motion.span
                                 className="relative z-10"
-                                animate={{ color: active ? '#ffffff' : '#565353' }}
+                                animate={{ color: active ? 'var(--color-nav-active-text)' : 'var(--color-text-subheading)' }}
                                 transition={{ duration: 0.15 }}
                             >
                                 {item.icon}
@@ -99,7 +99,7 @@ const Navbar: React.FC<NavbarProps> = ({ currentTab, setCurrentTab, scrollRef })
                             {/* Label below the icon */}
                             <motion.span
                                 className="relative z-10 text-[8px] font-medium leading-none tracking-wide whitespace-nowrap"
-                                animate={{ color: active ? '#ffffff' : '#565353' }}
+                                animate={{ color: active ? 'var(--color-nav-active-text)' : 'var(--color-text-subheading)' }}
                                 transition={{ duration: 0.15 }}
                             >
                                 {item.label}

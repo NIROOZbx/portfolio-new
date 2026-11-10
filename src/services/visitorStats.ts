@@ -34,42 +34,70 @@ async function getTotalViews(): Promise<number | null> {
     return typeof data === 'number' ? data : null
 }
 
-export async function getAndIncrementTotalViews(): Promise<number | null> {
+let cachedTotalViews: number | null = (() => {
     try {
-        // Check if running on local development environment
-        const isLocalhost = Boolean(
-            window.location.hostname === 'localhost' ||
-            window.location.hostname === '127.0.0.1' ||
-            window.location.hostname === '[::1]' ||
-            window.location.hostname.endsWith('.local')
-        )
+        const val = sessionStorage.getItem('portfolio_total_views')
+        return val ? Number(val) : null
+    } catch {
+        return null
+    }
+})()
+let inFlightPromise: Promise<number | null> | null = null
 
-        // Check if visitor count tracking is explicitly disabled in localStorage (e.g. for site owner)
-        const isIgnored = localStorage.getItem('ignore_visitor_count') === 'true'
-
-        // On localhost or owner ignored: show the count read-only without incrementing it
-        if (isLocalhost || isIgnored) {
-            return getTotalViews()
-        }
-
-        const visitorId = getOrCreateVisitorId()
-
-        // Call SECURITY DEFINER RPC function with visitorId
-        const { data, error } = await supabase.rpc('record_daily_visit', {
-            p_visitor_id: visitorId
-        })
-
-        if (error) {
-            console.error('[VisitorStats] Supabase RPC error:', error)
-            return null
-        }
-
-        if (typeof data === 'number') {
-            return data
-        }
-    } catch (err) {
-        console.error('[VisitorStats] Unexpected error:', err)
+export async function getAndIncrementTotalViews(): Promise<number | null> {
+    if (cachedTotalViews !== null) {
+        return cachedTotalViews
+    }
+    if (inFlightPromise) {
+        return inFlightPromise
     }
 
-    return null
+    inFlightPromise = (async () => {
+        try {
+            // Check if running on local development environment
+            const isLocalhost = Boolean(
+                window.location.hostname === 'localhost' ||
+                window.location.hostname === '127.0.0.1' ||
+                window.location.hostname === '[::1]' ||
+                window.location.hostname.endsWith('.local')
+            )
+
+            // Check if visitor count tracking is explicitly disabled in localStorage (e.g. for site owner)
+            const isIgnored = localStorage.getItem('ignore_visitor_count') === 'true'
+
+            let result: number | null = null
+            if (isLocalhost || isIgnored) {
+                result = await getTotalViews()
+            } else {
+                const visitorId = getOrCreateVisitorId()
+                const { data, error } = await supabase.rpc('record_daily_visit', {
+                    p_visitor_id: visitorId
+                })
+
+                if (error) {
+                    console.error('[VisitorStats] Supabase RPC error:', error)
+                } else if (typeof data === 'number') {
+                    result = data
+                }
+            }
+
+            if (result !== null) {
+                cachedTotalViews = result
+                try {
+                    sessionStorage.setItem('portfolio_total_views', String(result))
+                } catch {
+                    // ignore storage errors
+                }
+            }
+
+            return result
+        } catch (err) {
+            console.error('[VisitorStats] Unexpected error:', err)
+            return null
+        } finally {
+            inFlightPromise = null
+        }
+    })()
+
+    return inFlightPromise
 }

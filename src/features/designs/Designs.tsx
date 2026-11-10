@@ -202,7 +202,7 @@ const Designs: React.FC<DesignsProps> = ({ onHideFooter }) => {
                                                 {isActive && (
                                                     <motion.div
                                                         layoutId="active-folder-tab"
-                                                        className="absolute inset-0 bg-white rounded-full shadow-[0_1px_3px_rgba(0,0,0,0.1)] border border-black/[0.04]"
+                                                        className="absolute inset-0 bg-primary-bg rounded-full shadow-[0_1px_3px_rgba(0,0,0,0.1)] border border-black/[0.04]"
                                                         transition={{ type: 'spring', stiffness: 500, damping: 35 }}
                                                     />
                                                 )}
@@ -298,7 +298,7 @@ const Designs: React.FC<DesignsProps> = ({ onHideFooter }) => {
                                         <motion.div
                                             key={design.id}
                                             style={{ willChange: isAnimating ? 'transform, opacity' : 'auto' }}
-                                            className="cursor-pointer group rounded-2xl bg-white hover:shadow-[0_8px_30px_rgba(0,0,0,0.08)] border border-black/5 transition-shadow duration-300 p-3 flex flex-col"
+                                            className="cursor-pointer group rounded-2xl bg-primary-bg hover:shadow-[0_8px_30px_rgba(0,0,0,0.08)] border border-black/5 transition-shadow duration-300 p-3 flex flex-col"
                                             variants={{
                                                 hidden: { opacity: 0, y: 10 },
                                                 show: { opacity: 1, y: 0, transition: { duration: 0.3 } }
