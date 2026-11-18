@@ -4,9 +4,7 @@ import { Home, Briefcase, User, Folder, Mail, Palette } from 'lucide-react'
 import NavbarBrand from './NavbarBrand'
 import NavItems from './NavItems'
 import NavbarFooter from './NavbarFooter'
-import GithubContributionCard from '../../components/GitHub'
 import { useScrollHide } from '../../hooks/useScrollHide'
-import { useMediaQuery } from '../../hooks/useMediaQuery'
 
 interface NavbarProps {
     currentTab: string
@@ -25,7 +23,6 @@ const navItems = [
 
 const Navbar: React.FC<NavbarProps> = ({ currentTab, setCurrentTab, scrollRef }) => {
     const hidden = useScrollHide(scrollRef)
-    const isDesktop = useMediaQuery('(min-width: 768px)')
     const [tapped, setTapped] = React.useState<string | null>(null)
 
     return (
@@ -113,9 +110,6 @@ const Navbar: React.FC<NavbarProps> = ({ currentTab, setCurrentTab, scrollRef })
             <aside className="hidden md:flex flex-col w-[280px] min-w-[280px] h-screen py-6 px-6 bg-primary-bg border-r border-border box-border sticky top-0 z-30">
                 <NavbarBrand onNavigateHome={() => setCurrentTab('home')} />
                 <NavItems currentTab={currentTab} setCurrentTab={setCurrentTab} />
-                <div className="flex-grow flex items-center justify-center my-6 w-full overflow-hidden">
-                    {isDesktop && <GithubContributionCard />}
-                </div>
                 <NavbarFooter />
             </aside>
         </>

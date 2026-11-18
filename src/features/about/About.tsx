@@ -1,5 +1,6 @@
 import React from 'react'
 import TechStack from '../../components/TechStack'
+import GithubContributionCard from '../../components/GitHub'
 
 const About: React.FC = () => {
   return (
@@ -13,7 +14,7 @@ const About: React.FC = () => {
           </h1>
           
           <p className="font-sans font-semibold text-lg md:text-xl text-text-heading leading-relaxed">
-            Hey, I'm Nirooz. A full-stack developer who likes to build and break things.
+            Hey, I'm Nirooz. A full-stack engineer who likes to build and break things.
           </p>
           
           <p className="font-sans text-sm md:text-base text-text-subheading leading-relaxed">
@@ -34,25 +35,29 @@ const About: React.FC = () => {
         </div>
 
         {/* Right Column: Experience */}
-        <div className="w-full md:w-[40%] flex flex-col">
-          <h2 className="font-heading font-semibold text-4xl md:text-[56px] text-text-heading leading-[1.1] tracking-tight mb-8">
-            Experience
-          </h2>
-          
-          {/* Experience Card */}
-          <div className="border border-border rounded-[20px] p-5 bg-primary-bg flex justify-between items-start hover:shadow-sm transition-all duration-200">
-            <div className="flex flex-col text-left">
-              <h3 className="font-heading font-semibold text-lg text-text-heading leading-[1.1]">
-                Bridgeon
-              </h3>
-              <span className="font-sans text-sm text-text-subheading mt-1.5">
-                Full stack Trainee
+        <div className="w-full md:w-[40%] flex flex-col gap-6">
+          <div>
+            <h2 className="font-heading font-semibold text-4xl md:text-[56px] text-text-heading leading-[1.1] tracking-tight mb-8">
+              Experience
+            </h2>
+            
+            {/* Experience Card */}
+            <div className="border border-border rounded-[20px] p-5 bg-primary-bg flex justify-between items-start hover:shadow-sm transition-all duration-200">
+              <div className="flex flex-col text-left">
+                <h3 className="font-heading font-semibold text-lg text-text-heading leading-[1.1]">
+                  Bridgeon
+                </h3>
+                <span className="font-sans text-sm text-text-subheading mt-1.5">
+                  Full stack Trainee
+                </span>
+              </div>
+              <span className="font-sans text-[13px] text-text-subheading/60 font-medium select-none">
+                Jun 2025 – Jun 2026
               </span>
             </div>
-            <span className="font-sans text-[13px] text-text-subheading/60 font-medium select-none">
-              Jun 2025 – Jun 2026
-            </span>
           </div>
+
+          <GithubContributionCard />
         </div>
       </section>
 

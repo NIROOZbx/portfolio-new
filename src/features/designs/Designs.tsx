@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react'
+import React, { useState, useEffect, useRef, useCallback } from 'react'
 import { useSearchParams } from 'react-router-dom'
 import { motion, AnimatePresence } from 'framer-motion'
 import { ArrowLeft, Eye } from 'lucide-react'
@@ -7,6 +7,94 @@ import FolderCard from '../../components/FolderCard'
 import DesignModal from './DesignModal'
 import DesignsSkeleton from './DesignsSkeleton'
 import type { DesignFolder, DesignItem } from '../../types/designs'
+
+interface LazyDesignImageProps {
+    src?: string
+    alt: string
+}
+
+const LazyDesignImage: React.FC<LazyDesignImageProps> = ({ src, alt }) => {
+    const [isVisible, setIsVisible] = useState(false)
+    const [isLoaded, setIsLoaded] = useState(false)
+    const [hasError, setHasError] = useState(false)
+    const containerRef = useRef<HTMLDivElement>(null)
+
+    useEffect(() => {
+        setHasError(false)
+        setIsLoaded(false)
+    }, [src])
+
+    useEffect(() => {
+        const el = containerRef.current
+        if (!el) return
+
+        if (!('IntersectionObserver' in window)) {
+            setIsVisible(true)
+            return
+        }
+
+        const observer = new IntersectionObserver(
+            ([entry]) => {
+                if (entry.isIntersecting) {
+                    setIsVisible(true)
+                    observer.disconnect()
+                }
+            },
+            {
+                rootMargin: '250px 0px',
+                threshold: 0.01
+            }
+        )
+
+        observer.observe(el)
+        return () => observer.disconnect()
+    }, [])
+
+    const fallbackSrc = 'https://placehold.co/600x400/1e1e1e/565353?text=No+Image'
+    const finalSrc = hasError || !src ? fallbackSrc : src
+
+    return (
+        <div ref={containerRef} className="w-full h-full relative flex items-center justify-center">
+            {!isLoaded && !hasError && (
+                <div className="absolute inset-0 bg-black/[0.04] animate-pulse rounded-lg" />
+            )}
+            {isVisible && (
+                <img
+                    src={finalSrc}
+                    alt={alt}
+                    onError={() => {
+                        setHasError(true)
+                        setIsLoaded(true)
+                    }}
+                    onLoad={() => setIsLoaded(true)}
+                    className={`w-full h-full object-contain transition-all duration-300 lg:group-hover:scale-105 lg:group-hover:blur-[0.5px] ${
+                        isLoaded ? 'opacity-100' : 'opacity-0'
+                    }`}
+                    loading="lazy"
+                    decoding="async"
+                />
+            )}
+        </div>
+    )
+}
+
+const DesignCardSkeleton: React.FC<{ innerRef?: React.Ref<HTMLDivElement> }> = ({ innerRef }) => {
+    return (
+        <div
+            ref={innerRef}
+            className="rounded-2xl bg-primary-bg border border-black/5 p-3 flex flex-col overflow-hidden select-none"
+        >
+            <div className="relative rounded-xl overflow-hidden bg-black/[0.04] aspect-[4/3] shrink-0">
+                <div className="absolute inset-0 -translate-x-full animate-shimmer bg-gradient-to-r from-transparent via-white/50 to-transparent pointer-events-none" />
+            </div>
+            <div className="mt-4 px-1 flex flex-col pb-1">
+                <div className="relative h-3.5 w-3/4 rounded bg-black/[0.04] overflow-hidden">
+                    <div className="absolute inset-0 -translate-x-full animate-shimmer bg-gradient-to-r from-transparent via-white/50 to-transparent pointer-events-none" />
+                </div>
+            </div>
+        </div>
+    )
+}
 
 // Stale-While-Revalidate cache variables for 0ms instant loading
 let memoryFolders: DesignFolder[] | null = null
@@ -144,6 +232,98 @@ const Designs: React.FC<DesignsProps> = ({ onHideFooter }) => {
             onHideFooter(!!activeFolder || (!!folderIdParam && isLoading))
         }
     }, [activeFolder, folderIdParam, isLoading, onHideFooter])
+
+    const INITIAL_BATCH = 8
+    const BATCH_SIZE = 4
+    const [visibleCount, setVisibleCount] = useState(INITIAL_BATCH)
+    const isLoadingRef = useRef(false)
+    const sentinelRef = useRef<HTMLDivElement>(null)
+
+    // Decoupled loader that CANNOT be cancelled prematurely by React state re-renders
+    const loadMore = useCallback(() => {
+        if (isLoadingRef.current) return
+        if (visibleCount >= designs.length) return
+
+        isLoadingRef.current = true
+
+        window.setTimeout(() => {
+            setVisibleCount(prev => Math.min(prev + BATCH_SIZE, designs.length))
+            isLoadingRef.current = false
+        }, 350)
+    }, [visibleCount, designs.length])
+
+    // Reset when folder changes
+    useEffect(() => {
+        if (activeFolder) {
+            const mainEl = document.querySelector('main')
+            if (mainEl) mainEl.scrollTop = 0
+            window.scrollTo({ top: 0 })
+
+            isLoadingRef.current = false
+
+            if (designIdParam) {
+                const targetIdx = designs.findIndex(d => d.id === designIdParam)
+                if (targetIdx !== -1 && targetIdx >= INITIAL_BATCH) {
+                    setVisibleCount(Math.ceil((targetIdx + 1) / BATCH_SIZE) * BATCH_SIZE)
+                    return
+                }
+            }
+
+            setVisibleCount(INITIAL_BATCH)
+        }
+    }, [activeFolder?.id])
+
+    // Expand visible count if user navigates to a design beyond current batch
+    useEffect(() => {
+        if (designIdParam && activeFolder) {
+            const targetIdx = designs.findIndex(d => d.id === designIdParam)
+            if (targetIdx !== -1 && targetIdx >= visibleCount) {
+                setVisibleCount(Math.ceil((targetIdx + 1) / BATCH_SIZE) * BATCH_SIZE)
+            }
+        }
+    }, [designIdParam, activeFolder, designs, visibleCount])
+
+    const visibleDesigns = designs.slice(0, visibleCount)
+
+    // Primary: IntersectionObserver on sentinel
+    useEffect(() => {
+        const sentinel = sentinelRef.current
+        if (!sentinel) return
+
+        const observer = new IntersectionObserver(
+            ([entry]) => {
+                if (entry.isIntersecting) {
+                    loadMore()
+                }
+            },
+            {
+                rootMargin: '200px 0px',
+                threshold: 0
+            }
+        )
+
+        observer.observe(sentinel)
+        return () => observer.disconnect()
+    }, [loadMore, visibleDesigns.length])
+
+    // Secondary: Direct scroll listener on <main> scroll container for instant guaranteed trigger
+    useEffect(() => {
+        const mainEl = document.querySelector('main')
+        if (!mainEl) return
+
+        const handleScroll = () => {
+            if (isLoadingRef.current) return
+            if (visibleCount >= designs.length) return
+
+            const { scrollTop, scrollHeight, clientHeight } = mainEl
+            if (scrollHeight - scrollTop - clientHeight < 350) {
+                loadMore()
+            }
+        }
+
+        mainEl.addEventListener('scroll', handleScroll, { passive: true })
+        return () => mainEl.removeEventListener('scroll', handleScroll)
+    }, [loadMore, visibleCount, designs.length])
 
 
 
@@ -294,7 +474,7 @@ const Designs: React.FC<DesignsProps> = ({ onHideFooter }) => {
                             {/* ANIMATION START: The designs grid popping up without expensive scaling. */}
                             {designs.length > 0 ? (
                                 <div className="grid grid-cols-2 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4 md:gap-6 pb-10 min-h-[50vh] items-start">
-                                    {designs.map((design) => (
+                                    {visibleDesigns.map((design) => (
                                         <motion.div
                                             key={design.id}
                                             style={{ willChange: isAnimating ? 'transform, opacity' : 'auto' }}
@@ -310,13 +490,9 @@ const Designs: React.FC<DesignsProps> = ({ onHideFooter }) => {
                                             }}
                                         >
                                             <div className="relative rounded-xl overflow-hidden bg-[#f5f5f5] aspect-[4/3] shrink-0 flex items-center justify-center p-2">
-                                                <img
-                                                    src={design.image_url || 'https://placehold.co/600x400/1e1e1e/565353?text=No+Image'}
+                                                <LazyDesignImage
+                                                    src={design.image_url}
                                                     alt={design.title}
-                                                    onError={(e) => { e.currentTarget.src = 'https://placehold.co/600x400/1e1e1e/565353?text=No+Image' }}
-                                                    className="w-full h-full object-contain transition-all duration-300 lg:group-hover:scale-105 lg:group-hover:blur-[0.5px]"
-                                                    loading="lazy"
-                                                    decoding="async"
                                                 />
                                                 <div className="absolute inset-0 bg-black/40 opacity-0 lg:group-hover:opacity-100 transition-opacity duration-300 pointer-events-none flex items-center justify-center">
                                                     <p className="flex items-center gap-1 text-white text-[13px] font-sans font-medium tracking-wide opacity-0 translate-y-2 lg:group-hover:opacity-100 lg:group-hover:translate-y-0 transition-all duration-300 delay-75">
@@ -331,6 +507,18 @@ const Designs: React.FC<DesignsProps> = ({ onHideFooter }) => {
                                             </div>
                                         </motion.div>
                                     ))}
+
+                                    {/* Skeleton loading cards when scrolling */}
+                                    {visibleDesigns.length < designs.length && (
+                                        <>
+                                            {Array.from({ length: Math.min(BATCH_SIZE, designs.length - visibleDesigns.length) }).map((_, idx) => (
+                                                <DesignCardSkeleton
+                                                    key={`scroll-skel-${idx}`}
+                                                    innerRef={idx === 0 ? sentinelRef : undefined}
+                                                />
+                                            ))}
+                                        </>
+                                    )}
                                 </div>
                             ) : (
                                 <motion.div

@@ -1,10 +1,8 @@
 import React from 'react'
 import { motion } from 'framer-motion'
 import { ArrowLeft } from 'lucide-react'
-import GithubContributionCard from '../../components/GitHub'
 import NavbarFooter from '../navigation/NavbarFooter'
 import VisitorCounter from '../../components/VisitorCounter'
-import { useMediaQuery } from '../../hooks/useMediaQuery'
 
 let hasAnimatedBuildLoop = false
 
@@ -14,13 +12,11 @@ interface HomeProps {
 }
 
 const Home: React.FC<HomeProps> = ({ onViewDesigns, onGetInTouch }) => {
-    const isDesktop = useMediaQuery('(min-width: 768px)')
-
     return (
-        <section className="relative w-full min-h-[70vh] md:min-h-[80vh] flex flex-col items-center justify-center text-center pt-24 pb-12 md:py-20 overflow-hidden box-border">
+        <section className="relative w-full min-h-[70vh] md:min-h-[80vh] flex flex-col items-center justify-center text-center pt-0 pb-12 md:py-20 overflow-hidden box-border">
 
             {/* Centered Hero Content */}
-            <div className="max-w-[800px] mx-auto px-4 py-12 text-center relative z-10 w-full flex flex-col items-center justify-center">
+            <div className="max-w-[800px] mx-auto px-4 pt-0 pb-8 md:py-12 text-center relative z-10 w-full flex flex-col items-center justify-center">
                 {/* Available for Work Pill Badge */}
                 <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-primary-bg border border-black/[0.08] shadow-[0_2px_8px_rgba(0,0,0,0.04)] mb-4 select-none">
                     <span className="relative flex h-2 w-2">
@@ -115,11 +111,6 @@ const Home: React.FC<HomeProps> = ({ onViewDesigns, onGetInTouch }) => {
                 {/* Central Visitor Counter */}
                 <div className="flex justify-center items-center mb-6">
                     <VisitorCounter />
-                </div>
-
-                {/* GitHub Contributions Card on Mobile only (No page scroll needed) */}
-                <div className="block md:hidden w-full max-w-md mx-auto mb-8">
-                    {isDesktop === false && <GithubContributionCard />}
                 </div>
 
                 {/* Mobile-only Footer inside Home page wrapper to fit perfectly */}
