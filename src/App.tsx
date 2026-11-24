@@ -2,6 +2,7 @@ import { lazy, Suspense, useRef, useEffect, useState } from 'react'
 import { Routes, Route, useLocation, useNavigate } from 'react-router-dom'
 import Navbar from './features/navigation/Navbar'
 import NavbarFooter from './features/navigation/NavbarFooter'
+import AnnouncementBar from './components/AnnouncementBar'
 import heroImg from './assets/hero.webp'
 import heroImg1280 from './assets/hero-1280.webp'
 
@@ -28,6 +29,28 @@ function App() {
     const currentTab = currentPath === '' ? 'home' : currentPath
 
     const [hideFooter, setHideFooter] = useState(false)
+    const [isDismissed, setIsDismissed] = useState(() => {
+        try {
+            return sessionStorage.getItem('portfolio_dismiss_audit_bar') === 'true'
+        } catch {
+            return false
+        }
+    })
+
+    const handleDismiss = () => {
+        setIsDismissed(true)
+        try {
+            sessionStorage.setItem('portfolio_dismiss_audit_bar', 'true')
+        } catch {
+            // ignore
+        }
+    }
+
+    const handleAuditClick = () => {
+        navigate('/contact?audit=true')
+    }
+
+    const showAnnouncement = !isDismissed && currentTab !== 'contact'
 
     useEffect(() => {
         setHideFooter(false)
@@ -40,7 +63,7 @@ function App() {
     }
 
     return (
-        <div className="flex flex-col md:flex-row w-full h-svh relative bg-primary-bg">
+        <div className="flex flex-col md:flex-row w-full h-svh relative bg-primary-bg overflow-hidden">
             <DeferredTelemetry />
             {/* Viewport-wide Hero Background (only on Home tab) */}
             {currentTab === 'home' && (
@@ -57,41 +80,56 @@ function App() {
                 </div>
             )}
 
-            <Navbar currentTab={currentTab} setCurrentTab={handleTabChange} scrollRef={mainRef} />
+            <Navbar
+                currentTab={currentTab}
+                setCurrentTab={handleTabChange}
+                scrollRef={mainRef}
+                hasBanner={showAnnouncement}
+            />
 
-            {/* Main content */}
-            <main
-                ref={mainRef}
-                className={`flex-1 min-h-0 px-6 box-border relative z-10 mobile-content-pad
+            {/* Content area: Announcement bar (only fills after sidebar on desktop) + Main content */}
+            <div className="flex-1 flex flex-col min-h-0 w-full relative">
+                {showAnnouncement && (
+                    <AnnouncementBar
+                        onAuditClick={handleAuditClick}
+                        onDismiss={handleDismiss}
+                    />
+                )}
+
+                {/* Main content */}
+                <main
+                    ref={mainRef}
+                    className={`flex-1 min-h-0 px-6 box-border relative z-10 mobile-content-pad flex flex-col
           ${currentTab === 'home'
-                        ? 'overflow-hidden md:py-0 md:px-16 pt-[72px] md:pt-8'
-                        : 'overflow-y-auto pt-[96px] md:pt-8 md:pb-10 md:px-16'}`}
-            >
-                <div key={location.pathname} className={`tab-enter ${currentTab === 'home' ? 'h-full flex justify-center' : ''}`}>
-                        <Routes>
-                            <Route path="/" element={<Home onViewDesigns={() => navigate('/designs')} onGetInTouch={() => navigate('/contact')} />} />
-                            <Route path="/services" element={<Services />} />
-                            <Route path="/about" element={<About />} />
-                            <Route path="/projects" element={<Projects />} />
-                            <Route
-                                path="/designs"
-                                element={
-                                    <Suspense fallback={<DesignsSkeleton showHeader />}>
-                                        <Designs onHideFooter={setHideFooter} />
-                                    </Suspense>
-                                }
-                            />
-                            <Route path="/contact" element={<Contact />} />
-                            <Route path="*" element={<NotFound />} />
-                        </Routes>
-                        {currentTab !== 'home' && !hideFooter && (
-                            <div className="md:hidden mt-3 pb-8 border-t border-border/40 pt-8 w-full flex justify-center">
-                                <NavbarFooter />
-                            </div>
-                        )}
-                </div>
+                            ? `overflow-hidden md:py-0 md:px-16 ${showAnnouncement ? 'pt-[108px]' : 'pt-[72px]'}`
+                            : `overflow-y-auto ${showAnnouncement ? 'pt-[132px]' : 'pt-[96px]'} md:pt-8 md:pb-10 md:px-16`}`}
+                >
+                    <div key={location.pathname} className={`tab-enter ${currentTab === 'home' ? 'flex-1 flex justify-center' : ''}`}>
+                            <Routes>
+                                <Route path="/" element={<Home onViewDesigns={() => navigate('/designs')} onGetInTouch={() => navigate('/contact')} />} />
+                                <Route path="/services" element={<Services />} />
+                                <Route path="/about" element={<About />} />
+                                <Route path="/projects" element={<Projects />} />
+                                <Route
+                                    path="/designs"
+                                    element={
+                                        <Suspense fallback={<DesignsSkeleton showHeader />}>
+                                            <Designs onHideFooter={setHideFooter} />
+                                        </Suspense>
+                                    }
+                                />
+                                <Route path="/contact" element={<Contact />} />
+                                <Route path="*" element={<NotFound />} />
+                            </Routes>
+                            {currentTab !== 'home' && !hideFooter && (
+                                <div className="md:hidden mt-3 pb-8 border-t border-border/40 pt-8 w-full flex justify-center">
+                                    <NavbarFooter />
+                                </div>
+                            )}
+                    </div>
 
-            </main>
+                </main>
+            </div>
         </div>
     )
 }

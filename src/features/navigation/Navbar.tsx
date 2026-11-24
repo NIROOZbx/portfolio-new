@@ -10,6 +10,7 @@ interface NavbarProps {
     currentTab: string
     setCurrentTab: (tab: string) => void
     scrollRef?: React.RefObject<HTMLElement | null>
+    hasBanner?: boolean
 }
 
 const navItems = [
@@ -21,7 +22,7 @@ const navItems = [
     { id: 'contact', label: 'Contact', icon: <Mail size={16} strokeWidth={2} /> },
 ]
 
-const Navbar: React.FC<NavbarProps> = ({ currentTab, setCurrentTab, scrollRef }) => {
+const Navbar: React.FC<NavbarProps> = ({ currentTab, setCurrentTab, scrollRef, hasBanner = false }) => {
     const hidden = useScrollHide(scrollRef)
     const [tapped, setTapped] = React.useState<string | null>(null)
 
@@ -29,8 +30,10 @@ const Navbar: React.FC<NavbarProps> = ({ currentTab, setCurrentTab, scrollRef })
         <>
             {/* Mobile Top Header */}
             <header
-                className={`md:hidden w-full px-5 py-2 bg-primary-bg/90 backdrop-blur-xl border-b border-border/80 flex items-center fixed top-0 left-0 right-0 z-40 transition-transform duration-300 ease-in-out ${hidden ? '-translate-y-full' : 'translate-y-0'
-                    }`}
+                className={`md:hidden w-full px-5 py-2 bg-primary-bg/90 backdrop-blur-xl border-b border-border/80 flex items-center fixed left-0 right-0 z-40 transition-all duration-300 ease-in-out ${
+                    hidden ? '-translate-y-full opacity-0 pointer-events-none' : 'translate-y-0 opacity-100'
+                }`}
+                style={{ top: hasBanner ? '36px' : '0px' }}
             >
                 <NavbarBrand onNavigateHome={() => setCurrentTab('home')} />
             </header>

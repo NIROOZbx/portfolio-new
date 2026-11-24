@@ -1,4 +1,5 @@
 import React from 'react'
+import { useSearchParams } from 'react-router-dom'
 import ProgressIndicator from '../../components/ProgressIndicator'
 import {
     isEmailJSConfigured,
@@ -8,13 +9,24 @@ import {
 import { SITE_CONFIG } from '../../config/constants'
 import { Calendar, Send, CheckCircle2, AlertCircle } from 'lucide-react'
 
+const AUDIT_PREFILL = "Hi Nirooz, I'd like to get a free audit for my website: https://"
+
 const Contact: React.FC = () => {
+    const [searchParams] = useSearchParams()
+    const isAudit = searchParams.get('audit') === 'true'
+
     const [name, setName] = React.useState('')
     const [email, setEmail] = React.useState('')
-    const [message, setMessage] = React.useState('')
+    const [message, setMessage] = React.useState(() => (isAudit ? AUDIT_PREFILL : ''))
     const [isSending, setIsSending] = React.useState(false)
     const [status, setStatus] = React.useState<'idle' | 'success' | 'error'>('idle')
     const [copied, setCopied] = React.useState(false)
+
+    React.useEffect(() => {
+        if (isAudit) {
+            setMessage(prev => prev || AUDIT_PREFILL)
+        }
+    }, [isAudit])
 
     const emailAddress = SITE_CONFIG.email
     const calendlyUrl = SITE_CONFIG.calendly
@@ -68,29 +80,44 @@ const Contact: React.FC = () => {
 
                 <div className="w-full max-w-2xl mx-auto relative z-10 flex flex-col items-center">
                     <h2 className="font-heading font-semibold text-3xl md:text-[42px] text-white tracking-tight mb-4 text-center">
-                        Ready to work with me?
+                        {isAudit ? 'Get a Free Website Audit' : 'Ready to work with me?'}
                     </h2>
                     <p className="font-sans text-sm md:text-base text-[var(--color-gradient-end)] max-w-xl leading-relaxed mb-8 text-center">
-                        Whether you have a full project in mind or just a rough idea — drop a line below. I'll get back to you within 24 hours.
+                        {isAudit
+                            ? "Share your website link below. I'll review your site's UX, performance, and conversion bottlenecks within 24 hours."
+                            : "Whether you have a full project in mind or just a rough idea — drop a line below. I'll get back to you within 24 hours."}
                     </p>
 
                     {status === 'success' ? (
                         <div className="w-full bg-white/[0.02] border border-white/10 rounded-2xl p-8 flex flex-col items-center text-center animate-fade-in">
                             <CheckCircle2 size={48} className="text-green-400 mb-4" />
                             <h3 className="font-heading font-semibold text-2xl mb-2 text-white">
-                                Message Sent!
+                                {isAudit ? 'Audit Request Received!' : 'Message Sent!'}
                             </h3>
                             <p className="font-sans text-sm text-[var(--color-gradient-end)] mb-6 max-w-md">
                                 {copied
                                     ? "I've copied my email to your clipboard and opened your mail client with your message drafted. Talk soon!"
-                                    : "Thanks for reaching out! Your message was received and I'll get back to you shortly."}
+                                    : isAudit
+                                        ? "Thanks for requesting a free audit! I'll review your website and email you my findings within 24 hours."
+                                        : "Thanks for reaching out! Your message was received and I'll get back to you shortly."}
                             </p>
-                            <button
-                                onClick={() => setStatus('idle')}
-                                className="px-6 py-2.5 bg-primary-bg hover:bg-neutral-100 text-element-black font-sans text-sm font-semibold rounded-full transition-all duration-200 cursor-pointer active:scale-[0.98]"
-                            >
-                                Send another message
-                            </button>
+                            <div className="flex flex-col sm:flex-row items-center gap-3">
+                                <button
+                                    onClick={() => setStatus('idle')}
+                                    className="px-6 py-2.5 bg-primary-bg hover:bg-neutral-100 text-element-black font-sans text-sm font-semibold rounded-full transition-all duration-200 cursor-pointer active:scale-[0.98]"
+                                >
+                                    Send another message
+                                </button>
+                                <a
+                                    href={calendlyUrl}
+                                    target="_blank"
+                                    rel="noopener noreferrer"
+                                    className="inline-flex items-center gap-2 px-5 py-2.5 bg-white/[0.05] border border-white/10 hover:bg-white/[0.1] text-white rounded-full font-sans text-sm font-semibold transition-all cursor-pointer"
+                                >
+                                    <Calendar size={14} strokeWidth={2.2} />
+                                    Book a slot on my Calendar
+                                </a>
+                            </div>
                         </div>
                     ) : (
                         <form onSubmit={handleSubmit} className="w-full flex flex-col gap-5 text-left">
@@ -130,7 +157,7 @@ const Contact: React.FC = () => {
                             {/* Row 2: Message */}
                             <div className="flex flex-col gap-1.5">
                                 <label htmlFor="message" className="font-sans text-[11px] font-semibold text-neutral-400 uppercase tracking-wider">
-                                    Tell me about your project
+                                    {isAudit ? 'Website URL & Details' : 'Tell me about your project'}
                                 </label>
                                 <textarea
                                     id="message"
@@ -138,26 +165,39 @@ const Contact: React.FC = () => {
                                     rows={5}
                                     value={message}
                                     onChange={(e) => setMessage(e.target.value)}
-                                    placeholder="Share details about what you are building, design preferences, and timeline..."
+                                    placeholder={isAudit ? "https://yourwebsite.com — Let me know any specific pages or goals..." : "Share details about what you are building, design preferences, and timeline..."}
                                     className="px-4 py-3 bg-white/[0.03] border border-white/10 rounded-xl font-sans text-sm text-white placeholder-neutral-500 focus:outline-none focus:border-white/35 focus:bg-white/[0.05] transition-all resize-none"
                                 />
                             </div>
 
-                            {/* Submit Button */}
-                            <button
-                                type="submit"
-                                disabled={isSending}
-                                className="w-full flex items-center justify-center gap-2 px-6 py-3.5 bg-primary-bg hover:bg-neutral-100 disabled:bg-neutral-400 text-element-black font-sans text-sm font-semibold rounded-full transition-all duration-200 cursor-pointer active:scale-[0.98] select-none"
-                            >
-                                {isSending ? (
-                                    <span>Sending...</span>
-                                ) : (
-                                    <>
-                                        <span>Send Message</span>
-                                        <Send size={14} className="translate-y-[0.5px]" />
-                                    </>
-                                )}
-                            </button>
+                            {/* Side-by-Side Action Buttons: Submit Form + Book on Calendar */}
+                            <div className="flex flex-col sm:flex-row items-center gap-3 w-full pt-1">
+                                 <a
+                                    href={calendlyUrl}
+                                    target="_blank"
+                                    rel="noopener noreferrer"
+                                    className="w-full sm:flex-1 h-12 flex items-center justify-center gap-2 px-6 bg-white/[0.05] border border-white/10 hover:bg-white/[0.1] hover:border-white/20 text-white font-sans text-sm font-semibold rounded-full transition-all duration-200 cursor-pointer active:scale-[0.98] select-none"
+                                >
+                                    <Calendar size={14} strokeWidth={2.2} />
+                                    <span>Book a slot on my Calendar</span>
+                                </a>
+                                <button
+                                    type="submit"
+                                    disabled={isSending}
+                                    className="w-full sm:flex-1 h-12 flex items-center justify-center gap-2 px-6 bg-primary-bg hover:bg-neutral-100 disabled:bg-neutral-400 text-element-black font-sans text-sm font-semibold rounded-full transition-all duration-200 cursor-pointer active:scale-[0.98] select-none"
+                                >
+                                    {isSending ? (
+                                        <span>Sending...</span>
+                                    ) : (
+                                        <>
+                                            <span>{isAudit ? 'Request Free Audit' : 'Send Message'}</span>
+                                            <Send size={14} className="translate-y-[0.5px]" />
+                                        </>
+                                    )}
+                                </button>
+
+                               
+                            </div>
 
                             {status === 'error' && (
                                 <div className="flex items-center gap-2 px-4 py-3 bg-red-950/30 border border-red-500/20 text-red-300 text-xs rounded-[20px] mt-2 animate-fade-in">
@@ -167,26 +207,13 @@ const Contact: React.FC = () => {
                             )}
 
                             {/* DX Fallback helper (only displayed if credentials are not configured) */}
-                            {!isEmailJSConfigured && (
-                                <p className="text-[11px] text-neutral-500 text-center mt-2 leading-relaxed select-none">
+                            {!configured && (
+                                <p className="text-[11px] text-neutral-500 text-center mt-1 leading-relaxed select-none">
                                     Submitting will copy <strong>{emailAddress}</strong> to your clipboard and open your email client.
                                 </p>
                             )}
                         </form>
                     )}
-
-                    {/* Alternative direct calendar link */}
-                    <div className="mt-4 border-t border-white/5 w-full flex flex-col items-center">
-                        <a
-                            href={calendlyUrl}
-                            target="_blank"
-                            rel="noopener noreferrer"
-                            className="inline-flex items-center gap-2 px-5 py-2.5 bg-white/[0.03] border border-white/10 hover:bg-white/[0.07] text-white rounded-full font-sans text-[13px] font-semibold transition-all cursor-pointer select-none active:scale-[0.98]"
-                        >
-                            <Calendar size={13} strokeWidth={2.2} />
-                            Book a slot on my Calendar
-                        </a>
-                    </div>
                 </div>
             </div>
         </section>
